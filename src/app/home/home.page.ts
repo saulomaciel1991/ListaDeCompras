@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Item } from './item/item.model';
+import { ItemService } from './item/item.service';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +10,7 @@ import { Item } from './item/item.model';
 })
 export class HomePage implements OnInit {
   itens: Item[] = []
-  constructor(private alertCrtl: AlertController, private actionSheetCrtl: ActionSheetController) { }
+  constructor(private alertCrtl: AlertController, private actionSheetCrtl: ActionSheetController, private itemService: ItemService) { }
 
   ngOnInit(): void {
     this.listar()
@@ -123,15 +124,10 @@ export class HomePage implements OnInit {
         {
           text: 'Ok',
           handler: (form: Item) => {
-            this.itens.find(it => {
-              if (it.id == item.id) {
-                it.descricao = form.descricao
-                it.qtd = form.qtd
-                it.noCarrinho = false
-              }
-              return
-            })
-            localStorage.setItem('itens', JSON.stringify(this.itens))
+            item.descricao = form.descricao
+            item.qtd = form.qtd
+            
+            this.itemService.editar(item)
           },
         },
       ],
@@ -163,17 +159,47 @@ export class HomePage implements OnInit {
           }
         },
         {
+          text: item.noCarrinho ? 'Retirar do Carrinho' : 'Colocar no Carrinho',
+          icon: 'cart',
+          handler: () => {
+            item.noCarrinho = !item.noCarrinho
+            this.itemService.editar(item)
+          }
+        },
+        {
           text: 'Cancelar',
           icon: 'close',
           role: 'cancel',
           handler: () => {
-            console.log("Chamou a funcao cancelar")
           }
         }
       ]
     })
 
     await actionSheet.present()
+  }
+
+  ordenaPorDescricao() {
+    this.itens.sort((a, b) => {
+      const nameA = a.descricao.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.descricao.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+
+      // names must be equal
+      return 0;
+    });
+
+    localStorage.setItem('itens', JSON.stringify(this.itens))
+  }
+
+  ordenaPorQuantidade() {
+    this.itens.sort((a, b) => a.qtd - b.qtd);
+    localStorage.setItem('itens', JSON.stringify(this.itens))
   }
 
 }

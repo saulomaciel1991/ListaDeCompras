@@ -10,31 +10,37 @@
   <ion-grid>
     <ion-row id="row-title">
       <ion-col sizeXs="28">
-        <ion-item color="secondary">
+        <ion-item color="secondary" (click)="ordenaPorDescricao()">
           Descrição
         </ion-item>
       </ion-col>
       <ion-col sizeXs="8">
-        <ion-item color="secondary">
+        <ion-item color="secondary" (click)="ordenaPorQuantidade()">
           Qtd
         </ion-item>
       </ion-col>
     </ion-row>
     <ion-row id="row-detail" *ngFor="let item of itens" (click)="abrirOpcoes(item)">
       <ion-col sizeXs="28">
-        <ion-item color="tertiary">
+        <ion-item color="danger" *ngIf="item.noCarrinho">
+          <del>{{item.descricao}}</del>
+        </ion-item>
+        <ion-item color="tertiary" *ngIf="item.noCarrinho == false">
           {{item.descricao}}
         </ion-item>
       </ion-col>
       <ion-col sizeXs="8">
-        <ion-item color="tertiary">
+        <ion-item color="danger" *ngIf="item.noCarrinho">
+          <del>{{item.qtd}}</del>
+        </ion-item>
+        <ion-item color="tertiary" *ngIf="item.noCarrinho == false">
           {{item.qtd}}
         </ion-item>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <ion-fab slot="fixed" vertical="center" horizontal="end">
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button (click)="adicionarItem()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
