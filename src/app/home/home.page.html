@@ -1,34 +1,34 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
+  <ion-toolbar color="primary" class="ion-marging" mode="ios">
     <ion-title>
       Lista de Compras
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" mode="ios" id="content">
   <ion-grid>
     <ion-row>
-      <ion-col size="3">
-        <ion-item>
-          Qtd
+      <ion-col sizeXs="28">
+        <ion-item color="secondary">
+          Descrição
         </ion-item>
       </ion-col>
-      <ion-col size="8">
-        <ion-item>
-          Descrição
+      <ion-col sizeXs="8">
+        <ion-item color="secondary">
+          Qtd
         </ion-item>
       </ion-col>
     </ion-row>
     <ion-row *ngFor="let item of itens" (click)="excluir()">
-      <ion-col size="3">
-        <ion-item>
-          {{item.qtd}}
+      <ion-col sizeXs="28">
+        <ion-item color="tertiary">
+          {{item.descricao}}
         </ion-item>
       </ion-col>
-      <ion-col size="8">
-        <ion-item>
-          {{item.descricao}}
+      <ion-col sizeXs="8">
+        <ion-item color="tertiary">
+          {{item.qtd}}
         </ion-item>
       </ion-col>
     </ion-row>

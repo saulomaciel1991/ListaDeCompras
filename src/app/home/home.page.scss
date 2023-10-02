@@ -1,3 +1,7 @@
+$color-primary: #3880ff;
+$color-secondary: #3dc2ff;
+$color-tertiary: #5260ff;
+
 #container {
   text-align: center;
 
@@ -24,4 +28,17 @@
 
 #container a {
   text-decoration: none;
+}
+
+ion-grid {
+  --ion-grid-columns: 36;
+}
+
+.content {
+  background-color: $color-primary;
+}
+
+ion-toolbar {
+  border: solid 1px #b3b3b3;
+  border-radius: 10px;
 }
