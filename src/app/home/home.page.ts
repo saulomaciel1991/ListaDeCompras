@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Item } from './item/item.model';
 
 @Component({
@@ -9,7 +9,7 @@ import { Item } from './item/item.model';
 })
 export class HomePage implements OnInit {
   itens: Item[] = []
-  constructor(private alertController: AlertController) { }
+  constructor(private alertCrtl: AlertController, private actionSheetCrtl: ActionSheetController) { }
 
   ngOnInit(): void {
     this.listar()
@@ -41,7 +41,7 @@ export class HomePage implements OnInit {
   }
 
   async adicionarItem() {
-    const alert = await this.alertController.create({
+    const alert = await this.alertCrtl.create({
       header: 'Novo Item',
       inputs: [
         {
@@ -75,7 +75,7 @@ export class HomePage implements OnInit {
                 qtd: form.qtd,
                 descricao: form.descricao
               })
-            }else{
+            } else {
               let id = this.itens[pos].id + 1
               this.salvar({
                 id: id,
@@ -91,8 +91,86 @@ export class HomePage implements OnInit {
     alert.present();
   }
 
-  excluir() {
+  async editarItem(item: Item) {
+    const alert = await this.alertCrtl.create({
+      header: 'Editar ' + item.descricao,
+      inputs: [
+        {
+          name: 'qtd',
+          type: 'number',
+          placeholder: 'Informe a quantidade',
+          value: item.qtd,
+        },
+        {
+          name: 'descricao',
+          type: 'text',
+          placeholder: 'Informe a descrição do item',
+          value: item.descricao,
+        },
+      ],
 
+      buttons: [
+        {
+          text: 'Cancela',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+
+          },
+        },
+        {
+          text: 'Ok',
+          handler: (form: Item) => {
+            this.itens.find(it => {
+              if (it.id == item.id) {
+                it.descricao = form.descricao
+                it.qtd = form.qtd
+              }
+              return
+            })
+            localStorage.setItem('itens', JSON.stringify(this.itens))
+          },
+        },
+      ],
+    });
+
+    alert.present();
+  }
+
+  async abrirOpcoes(item: Item) {
+    const actionSheet = await this.actionSheetCrtl.create({
+      header: 'Opções',
+      buttons: [
+        {
+          text: 'Editar',
+          icon: 'pencil',
+          handler: () => {
+            this.editarItem(item)
+          }
+        },
+        {
+          text: 'Excluir',
+          icon: 'trash',
+          role: 'destructive',
+          handler: () => {
+            this.itens = this.itens.filter(it => {
+              return it.id != item.id
+            })
+            localStorage.setItem('itens', JSON.stringify(this.itens))
+          }
+        },
+        {
+          text: 'Cancelar',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => {
+            console.log("Chamou a funcao cancelar")
+          }
+        }
+      ]
+    })
+
+    await actionSheet.present()
   }
 
 }

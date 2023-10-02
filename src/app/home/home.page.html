@@ -20,7 +20,7 @@
         </ion-item>
       </ion-col>
     </ion-row>
-    <ion-row *ngFor="let item of itens" (click)="excluir()">
+    <ion-row *ngFor="let item of itens" (click)="abrirOpcoes(item)">
       <ion-col sizeXs="28">
         <ion-item color="tertiary">
           {{item.descricao}}
