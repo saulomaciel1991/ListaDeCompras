@@ -44,6 +44,7 @@ export class HomePage implements OnInit {
   async adicionarItem() {
     const alert = await this.alertCrtl.create({
       header: 'Novo Item',
+      mode:'ios',
       inputs: [
         {
           name: 'qtd',
@@ -97,6 +98,7 @@ export class HomePage implements OnInit {
   async editarItem(item: Item) {
     const alert = await this.alertCrtl.create({
       header: 'Editar ' + item.descricao,
+      mode: 'ios',
       inputs: [
         {
           name: 'qtd',
@@ -126,7 +128,7 @@ export class HomePage implements OnInit {
           handler: (form: Item) => {
             item.descricao = form.descricao
             item.qtd = form.qtd
-            
+
             this.itemService.editar(item)
           },
         },
@@ -138,6 +140,7 @@ export class HomePage implements OnInit {
 
   async abrirOpcoes(item: Item) {
     const actionSheet = await this.actionSheetCrtl.create({
+      mode: 'ios',
       header: 'Opções',
       buttons: [
         {

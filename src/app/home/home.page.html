@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" mode="ios">
   <ion-toolbar color="primary" mode="ios">
     <ion-title>
       Lista de Compras
@@ -7,7 +7,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" mode="ios" id="content">
-  <ion-grid>
+  <ion-grid mode="ios">
     <ion-row id="row-title">
       <ion-col sizeXs="28">
         <ion-item color="secondary" (click)="ordenaPorDescricao()">
