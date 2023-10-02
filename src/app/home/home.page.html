@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary" class="ion-marging" mode="ios">
+  <ion-toolbar color="primary" mode="ios">
     <ion-title>
       Lista de Compras
     </ion-title>
@@ -8,7 +8,7 @@
 
 <ion-content [fullscreen]="true" mode="ios" id="content">
   <ion-grid>
-    <ion-row>
+    <ion-row id="row-title">
       <ion-col sizeXs="28">
         <ion-item color="secondary">
           Descrição
@@ -20,7 +20,7 @@
         </ion-item>
       </ion-col>
     </ion-row>
-    <ion-row *ngFor="let item of itens" (click)="abrirOpcoes(item)">
+    <ion-row id="row-detail" *ngFor="let item of itens" (click)="abrirOpcoes(item)">
       <ion-col sizeXs="28">
         <ion-item color="tertiary">
           {{item.descricao}}

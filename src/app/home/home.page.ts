@@ -73,14 +73,16 @@ export class HomePage implements OnInit {
               this.salvar({
                 id: 1,
                 qtd: form.qtd,
-                descricao: form.descricao
+                descricao: form.descricao,
+                noCarrinho: false
               })
             } else {
               let id = this.itens[pos].id + 1
               this.salvar({
                 id: id,
                 qtd: form.qtd,
-                descricao: form.descricao
+                descricao: form.descricao,
+                noCarrinho: false
               })
             }
           },
@@ -125,6 +127,7 @@ export class HomePage implements OnInit {
               if (it.id == item.id) {
                 it.descricao = form.descricao
                 it.qtd = form.qtd
+                it.noCarrinho = false
               }
               return
             })
