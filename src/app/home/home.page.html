@@ -8,7 +8,7 @@
 
 <ion-content [fullscreen]="true" mode="ios" id="content">
   <ion-grid mode="ios">
-    <ion-row id="row-title">
+    <ion-row id="row-title" *ngIf="itens.length > 0">
       <ion-col sizeXs="28">
         <ion-item color="secondary" (click)="ordenaPorDescricao()">
           Descrição
@@ -18,6 +18,13 @@
         <ion-item color="secondary" (click)="ordenaPorQuantidade()">
           Qtd
         </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="itens.length == 0">
+      <ion-col>
+        <h1>
+          Lista vazia!
+        </h1>
       </ion-col>
     </ion-row>
     <ion-row id="row-detail" *ngFor="let item of itens" (click)="abrirOpcoes(item)">
