@@ -52,6 +52,11 @@ export class HomePage implements OnInit {
           placeholder: 'Informe a quantidade',
         },
         {
+          name: 'valor',
+          type: 'number',
+          placeholder: 'Informe o valor',
+        },
+        {
           name: 'descricao',
           type: 'text',
           placeholder: 'Informe a descrição do item',
@@ -76,7 +81,8 @@ export class HomePage implements OnInit {
                 id: 1,
                 qtd: form.qtd,
                 descricao: form.descricao,
-                noCarrinho: false
+                noCarrinho: false,
+                valor: form.valor
               })
             } else {
               let id = this.itens[pos].id + 1
@@ -84,7 +90,8 @@ export class HomePage implements OnInit {
                 id: id,
                 qtd: form.qtd,
                 descricao: form.descricao,
-                noCarrinho: false
+                noCarrinho: false,
+                valor: form.valor
               })
             }
           },
