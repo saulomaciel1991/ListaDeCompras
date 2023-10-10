@@ -12,6 +12,11 @@ export class HomePage implements OnInit {
   itens: Item[] = []
   constructor(private alertCrtl: AlertController, private actionSheetCrtl: ActionSheetController, private itemService: ItemService) { }
 
+  formatter = new Intl.NumberFormat('default', {
+    style: 'currency',
+    currency: 'BRL',
+  });
+
   ngOnInit(): void {
     this.listar()
   }
@@ -39,6 +44,16 @@ export class HomePage implements OnInit {
     }
 
     this.listar()
+  }
+
+  getTotal(){
+    let soma: number = 0
+
+    this.itens.forEach( e =>{
+      soma += (e.valor * e.qtd)
+    })
+    
+    return this.formatter.format(soma)
   }
 
   async adicionarItem() {
@@ -79,19 +94,19 @@ export class HomePage implements OnInit {
             if (pos == -1) {
               this.salvar({
                 id: 1,
-                qtd: form.qtd,
+                qtd: parseInt(form.qtd),
                 descricao: form.descricao,
                 noCarrinho: false,
-                valor: form.valor
+                valor: parseInt(form.valor)
               })
             } else {
               let id = this.itens[pos].id + 1
               this.salvar({
                 id: id,
-                qtd: form.qtd,
+                qtd: parseInt(form.qtd),
                 descricao: form.descricao,
                 noCarrinho: false,
-                valor: form.valor
+                valor: parseInt(form.valor)
               })
             }
           },
@@ -112,6 +127,12 @@ export class HomePage implements OnInit {
           type: 'number',
           placeholder: 'Informe a quantidade',
           value: item.qtd,
+        },
+        {
+          name: 'valor',
+          type: 'number',
+          placeholder: 'Informe o valor',
+          value: item.valor
         },
         {
           name: 'descricao',
@@ -135,7 +156,7 @@ export class HomePage implements OnInit {
           handler: (form: Item) => {
             item.descricao = form.descricao
             item.qtd = form.qtd
-
+            item.valor = form.valor
             this.itemService.editar(item)
           },
         },
