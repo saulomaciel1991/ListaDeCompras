@@ -25,6 +25,16 @@ export class ItemService {
     }
   }
 
+  salvar(itens: Item[]){
+    localStorage.setItem('itens', JSON.stringify(itens))
+  }
+
+  listar(): Item[]{
+    let value : any = localStorage.getItem('itens')
+    let lista: any[] = JSON.parse(value)
+    return lista
+  }
+
   orderByDescricao() {
     let value = localStorage.getItem('itens')
     if (value == null || value == undefined) {

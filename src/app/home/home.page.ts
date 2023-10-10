@@ -22,27 +22,12 @@ export class HomePage implements OnInit {
   }
 
   listar() {
-    let value = localStorage.getItem('itens')
-    if (value == null || value == undefined) {
-      return
-    } else {
-      let lista: any[] = JSON.parse(value)
-      this.itens = lista
-    }
+    this.itens = this.itemService.listar()
   }
 
   salvar(item: Item) {
-    let value = localStorage.getItem('itens')
-
-    if (value == null || value == undefined) {
-      this.itens.push(item)
-      localStorage.setItem('itens', JSON.stringify(this.itens))
-    } else {
-      let lista: any[] = JSON.parse(value)
-      lista.push(item)
-      localStorage.setItem('itens', JSON.stringify(lista))
-    }
-
+    this.itens.push(item)
+    this.itemService.salvar(this.itens)
     this.listar()
   }
 
@@ -54,6 +39,39 @@ export class HomePage implements OnInit {
     })
     
     return this.formatter.format(soma)
+  }
+
+  retirarTodosDoCarrinho(){
+    this.itens.forEach( e=>{
+      e.noCarrinho = false
+    })
+
+    this.itemService.salvar(this.itens)
+  }
+
+  async menu (){
+    const actionSheet = await this.actionSheetCrtl.create({
+      mode: 'ios',
+      header: 'Configurações',
+      buttons: [
+        {
+          text: 'Retirar Todos do Carrinho',
+          icon: 'trash',
+          handler: () => {
+            this.retirarTodosDoCarrinho()
+          }
+        },
+        {
+          text: 'Cancelar',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => {
+          }
+        }
+      ]
+    })
+
+    await actionSheet.present()
   }
 
   async adicionarItem() {
@@ -97,7 +115,7 @@ export class HomePage implements OnInit {
                 qtd: parseInt(form.qtd),
                 descricao: form.descricao,
                 noCarrinho: false,
-                valor: parseInt(form.valor)
+                valor: parseFloat(form.valor)
               })
             } else {
               let id = this.itens[pos].id + 1
@@ -106,7 +124,7 @@ export class HomePage implements OnInit {
                 qtd: parseInt(form.qtd),
                 descricao: form.descricao,
                 noCarrinho: false,
-                valor: parseInt(form.valor)
+                valor: parseFloat(form.valor)
               })
             }
           },
@@ -186,7 +204,7 @@ export class HomePage implements OnInit {
             this.itens = this.itens.filter(it => {
               return it.id != item.id
             })
-            localStorage.setItem('itens', JSON.stringify(this.itens))
+            this.itemService.salvar(this.itens)
           }
         },
         {
