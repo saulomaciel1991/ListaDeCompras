@@ -44,7 +44,7 @@ export class HomePage implements OnInit {
   async adicionarItem() {
     const alert = await this.alertCrtl.create({
       header: 'Novo Item',
-      mode:'ios',
+      mode: 'ios',
       inputs: [
         {
           name: 'qtd',
@@ -183,26 +183,13 @@ export class HomePage implements OnInit {
   }
 
   ordenaPorDescricao() {
-    this.itens.sort((a, b) => {
-      const nameA = a.descricao.toUpperCase(); // ignore upper and lowercase
-      const nameB = b.descricao.toUpperCase(); // ignore upper and lowercase
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-
-      // names must be equal
-      return 0;
-    });
-
-    localStorage.setItem('itens', JSON.stringify(this.itens))
+    this.itemService.orderByDescricao()
+    this.listar()
   }
 
   ordenaPorQuantidade() {
-    this.itens.sort((a, b) => a.qtd - b.qtd);
-    localStorage.setItem('itens', JSON.stringify(this.itens))
+    this.itemService.orderByQtd()
+    this.listar()
   }
 
 }
