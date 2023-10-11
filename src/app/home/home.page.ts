@@ -97,7 +97,7 @@ export class HomePage implements OnInit {
                 qtd: parseInt(form.qtd),
                 descricao: form.descricao,
                 noCarrinho: false,
-                valor: parseInt(form.valor)
+                valor: parseFloat(form.valor)
               })
             } else {
               let id = this.itens[pos].id + 1
@@ -106,7 +106,7 @@ export class HomePage implements OnInit {
                 qtd: parseInt(form.qtd),
                 descricao: form.descricao,
                 noCarrinho: false,
-                valor: parseInt(form.valor)
+                valor: parseFloat(form.valor)
               })
             }
           },

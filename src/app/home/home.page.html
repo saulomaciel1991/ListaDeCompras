@@ -25,13 +25,6 @@
         </ion-item>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="itens.length == 0">
-      <ion-col>
-        <h1>
-          Lista vazia!
-        </h1>
-      </ion-col>
-    </ion-row>
     <ion-row id="row-detail" *ngFor="let item of itens" (click)="abrirOpcoes(item)">
       <ion-col sizeXs="20">
         <ion-item color="danger" *ngIf="item.noCarrinho">
@@ -58,7 +51,7 @@
         </ion-item>
       </ion-col>
     </ion-row>
-    <ion-row class="ion-padding">
+    <ion-row class="ion-padding" *ngIf="itens.length > 0">
       <ion-col sizeXs="24">
         <ion-item color="warning">
           <ion-label>Total</ion-label>
@@ -71,6 +64,14 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <ion-item *ngIf="itens.length == 0">
+    <ion-label class="ion-text-center">
+      <h1>
+        Lista vazia!
+      </h1>
+    </ion-label>
+  </ion-item>
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button (click)="adicionarItem()">
