@@ -25,8 +25,8 @@ export class ItemService {
     }
   }
 
-  salvarLista(itens: Item[]) : void{
-      localStorage.setItem('itens', JSON.stringify(itens))
+  salvarLista(itens: Item[]): void {
+    localStorage.setItem('itens', JSON.stringify(itens))
   }
 
   orderByDescricao() {
@@ -65,14 +65,25 @@ export class ItemService {
     }
   }
 
-  getTodos() : Item[]{
+  getTodos(): Item[] {
     let value = localStorage.getItem('itens')
 
     if (value == null || value == undefined) {
       return []
-    }else{
-      let lista : any[] = JSON.parse(value)
+    } else {
+      let lista: any[] = JSON.parse(value)
       return lista
     }
+  }
+
+  getbyId(id: string): Item {
+    let value : any= localStorage.getItem('itens')
+
+    let lista: any[] = JSON.parse(value)
+    let item: Item = lista.find(e => {
+      return e.id == id
+    })
+
+    return item
   }
 }

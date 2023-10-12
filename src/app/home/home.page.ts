@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, NavController } from '@ionic/angular';
 import { Item } from './item/item.model';
 import { ItemService } from './item/item.service';
 import * as uuid from 'uuid';
@@ -11,7 +11,7 @@ import * as uuid from 'uuid';
 })
 export class HomePage implements OnInit {
   itens: Item[] = []
-  constructor(private alertCrtl: AlertController, private actionSheetCrtl: ActionSheetController, private itemService: ItemService) { }
+  constructor(private alertCrtl: AlertController, private actionSheetCrtl: ActionSheetController, private itemService: ItemService, private navCrtl: NavController) { }
 
   formatter = new Intl.NumberFormat('default', {
     style: 'currency',
@@ -55,15 +55,15 @@ export class HomePage implements OnInit {
     this.listar()
   }
 
-  retirarTodosDoCarrinho(){
-    this.itens.forEach( e=>{
+  retirarTodosDoCarrinho() {
+    this.itens.forEach(e => {
       e.noCarrinho = false
     })
 
     this.itemService.salvarLista(this.itens)
   }
 
-  async menu (){
+  async menu() {
     const actionSheet = await this.actionSheetCrtl.create({
       mode: 'ios',
       header: 'Configurações',
@@ -195,7 +195,8 @@ export class HomePage implements OnInit {
           text: 'Editar',
           icon: 'pencil',
           handler: () => {
-            this.editarItem(item)
+            // this.editarItem(item)
+            this.navCrtl.navigateForward('home/editar/'+item.id)
           }
         },
         {
