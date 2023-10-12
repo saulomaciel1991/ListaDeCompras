@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Item } from '../item.model';
 import * as uuid from 'uuid';
 import { ItemService } from '../item.service';
@@ -14,9 +14,10 @@ export class NovoPage implements OnInit {
   itens!: Item[]
   qtd!: number
   valor!: number
-  descricao! : string
+  descricao!: string
+  @ViewChild('qtdInput') myInput!: any
 
-  constructor(private itemService: ItemService, private navCrtl : NavController) { }
+  constructor(private itemService: ItemService, private navCrtl: NavController) { }
 
   ngOnInit() {
   }
@@ -24,6 +25,7 @@ export class NovoPage implements OnInit {
 
   ionViewDidEnter() {
     this.itens = this.itemService.getTodos()
+    this.myInput.setFocus();
   }
 
   onEnter(event: any) {
@@ -33,19 +35,23 @@ export class NovoPage implements OnInit {
   }
 
   salvar() {
-    
-    if(this.descricao != null && this.qtd > 0){
+
+    if (this.descricao != null && this.qtd > 0) {
       this.item = {
-        id : uuid.v4(),
-        descricao : this.descricao,
+        id: uuid.v4(),
+        descricao: this.primeiraMaiuscula(this.descricao),
         noCarrinho: false,
-        qtd : this.qtd,
-        valor : this.valor == null ? 0 : this.valor
+        qtd: this.qtd,
+        valor: this.valor == null ? 0 : this.valor
       }
-  
+
       this.itens.push(this.item)
       this.itemService.salvarLista(this.itens)
       this.navCrtl.navigateBack("/home")
     }
+  }
+
+  primeiraMaiuscula(texto: string) : string{
+    return texto.replace(/^\w/, (c) => c.toUpperCase());
   }
 }
