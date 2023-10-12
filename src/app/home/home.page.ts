@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Item } from './item/item.model';
 import { ItemService } from './item/item.service';
+import * as uuid from 'uuid';
 
 @Component({
   selector: 'app-home',
@@ -25,13 +26,13 @@ export class HomePage implements OnInit {
     this.itens = this.itemService.getTodos()
   }
 
-  getTotal(){
+  getTotal() {
     let soma: number = 0
 
-    this.itens.forEach( e =>{
+    this.itens.forEach(e => {
       soma += (e.valor * e.qtd)
     })
-    
+
     return this.formatter.format(soma)
   }
 
@@ -85,25 +86,13 @@ export class HomePage implements OnInit {
         {
           text: 'Ok',
           handler: (form) => {
-            let pos = this.itens.length - 1
-            if (pos == -1) {
-              this.salvar({
-                id: 1,
-                qtd: parseInt(form.qtd),
-                descricao: form.descricao,
-                noCarrinho: false,
-                valor: parseFloat(form.valor)
-              })
-            } else {
-              let id = this.itens[pos].id + 1
-              this.salvar({
-                id: id,
-                qtd: parseInt(form.qtd),
-                descricao: form.descricao,
-                noCarrinho: false,
-                valor: parseFloat(form.valor)
-              })
-            }
+            this.salvar({
+              id: uuid.v4(),
+              qtd: parseInt(form.qtd),
+              descricao: form.descricao,
+              noCarrinho: false,
+              valor: parseFloat(form.valor)
+            })
           },
         },
       ],
