@@ -26,9 +26,7 @@ export class ItemService {
   }
 
   salvarLista(itens: Item[]) : void{
-    if (itens.length > 0){
       localStorage.setItem('itens', JSON.stringify(itens))
-    }
   }
 
   orderByDescricao() {
