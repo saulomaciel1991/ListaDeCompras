@@ -59,7 +59,7 @@
       </ion-col>
       <ion-col sizeXs="12">
         <ion-item color="warning">
-        {{getTotal()}}
+          {{getTotal()}}
         </ion-item>
       </ion-col>
     </ion-row>
@@ -74,7 +74,8 @@
   </ion-item>
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button (click)="adicionarItem()">
+    <!-- <ion-fab-button (click)="adicionarItem()"> -->
+    <ion-fab-button routerLink="/home/novo">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

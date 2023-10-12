@@ -6,7 +6,11 @@ const routes: Routes = [
   {
     path: '',
     component: HomePage,
+  },  {
+    path: 'novo',
+    loadChildren: () => import('./item/novo/novo.module').then( m => m.NovoPageModule)
   }
+
 ];
 
 @NgModule({
