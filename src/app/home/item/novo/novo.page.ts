@@ -52,6 +52,7 @@ export class NovoPage implements OnInit {
   }
 
   primeiraMaiuscula(texto: string) : string{
+    texto = texto.toLowerCase()
     return texto.replace(/^\w/, (c) => c.toUpperCase());
   }
 }
