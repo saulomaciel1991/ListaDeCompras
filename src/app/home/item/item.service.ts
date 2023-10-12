@@ -25,14 +25,10 @@ export class ItemService {
     }
   }
 
-  salvar(itens: Item[]){
-    localStorage.setItem('itens', JSON.stringify(itens))
-  }
-
-  listar(): Item[]{
-    let value : any = localStorage.getItem('itens')
-    let lista: any[] = JSON.parse(value)
-    return lista
+  salvarLista(itens: Item[]) : void{
+    if (itens.length > 0){
+      localStorage.setItem('itens', JSON.stringify(itens))
+    }
   }
 
   orderByDescricao() {
@@ -68,6 +64,17 @@ export class ItemService {
       let lista: any[] = JSON.parse(value)
       lista.sort((a, b) => a.noCarrinho - b.noCarrinho || a.qtd - b.qtd);
       localStorage.setItem('itens', JSON.stringify(lista))
+    }
+  }
+
+  getTodos() : Item[]{
+    let value = localStorage.getItem('itens')
+
+    if (value == null || value == undefined) {
+      return []
+    }else{
+      let lista : any[] = JSON.parse(value)
+      return lista
     }
   }
 }

@@ -13,8 +13,8 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" mode="ios" id="content">
-  <ion-grid mode="ios" *ngIf="itens.length > 0">
-    <ion-row id="row-title">
+  <ion-grid mode="ios">
+    <ion-row id="row-title" *ngIf="itens.length > 0">
       <ion-col sizeXs="19">
         <ion-item color="secondary" (click)="ordenaPorDescricao()">
           Descrição
@@ -57,7 +57,7 @@
         </ion-item>
       </ion-col>
     </ion-row>
-    <ion-row class="ion-padding">
+    <ion-row class="ion-padding" *ngIf="itens.length > 0">
       <ion-col sizeXs="24">
         <ion-item color="warning">
           <ion-label>Total</ion-label>
@@ -80,7 +80,8 @@
   </ion-item>
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button (click)="adicionarItem()">
+    <!-- <ion-fab-button (click)="adicionarItem()"> -->
+    <ion-fab-button routerLink="/home/novo">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
