@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package br.com.ionic.listadecompras;
 
 import com.getcapacitor.BridgeActivity;
 
