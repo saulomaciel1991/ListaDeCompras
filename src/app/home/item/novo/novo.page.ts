@@ -34,16 +34,18 @@ export class NovoPage implements OnInit {
 
   salvar() {
     
-    this.item = {
-      id : uuid.v4(),
-      descricao : this.descricao,
-      noCarrinho: false,
-      qtd : this.qtd,
-      valor : this.valor
+    if(this.descricao != null && this.qtd > 0){
+      this.item = {
+        id : uuid.v4(),
+        descricao : this.descricao,
+        noCarrinho: false,
+        qtd : this.qtd,
+        valor : this.valor == null ? 0 : this.valor
+      }
+  
+      this.itens.push(this.item)
+      this.itemService.salvarLista(this.itens)
+      this.navCrtl.navigateBack("/home")
     }
-
-    this.itens.push(this.item)
-    this.itemService.salvarLista(this.itens)
-    this.navCrtl.navigateBack("/home")
   }
 }
