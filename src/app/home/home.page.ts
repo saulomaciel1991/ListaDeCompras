@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController, AlertController, NavController } from '@ionic/angular';
+import { ActionSheetController, NavController } from '@ionic/angular';
 import { Item } from './item/item.model';
 import { ItemService } from './item/item.service';
 import * as uuid from 'uuid';
@@ -11,7 +11,11 @@ import * as uuid from 'uuid';
 })
 export class HomePage implements OnInit {
   itens: Item[] = []
-  constructor(private alertCrtl: AlertController, private actionSheetCrtl: ActionSheetController, private itemService: ItemService, private navCrtl: NavController) { }
+  constructor(
+    private actionSheetCrtl: ActionSheetController,
+    private itemService: ItemService,
+    private navCrtl: NavController,
+  ) { }
 
   formatter = new Intl.NumberFormat('default', {
     style: 'currency',
@@ -88,104 +92,6 @@ export class HomePage implements OnInit {
     await actionSheet.present()
   }
 
-  async adicionarItem() {
-    const alert = await this.alertCrtl.create({
-      header: 'Novo Item',
-      mode: 'ios',
-      inputs: [
-        {
-          name: 'qtd',
-          type: 'number',
-          placeholder: 'Informe a quantidade',
-        },
-        {
-          name: 'valor',
-          type: 'number',
-          placeholder: 'Informe o valor',
-        },
-        {
-          name: 'descricao',
-          type: 'text',
-          placeholder: 'Informe a descrição do item',
-        },
-      ],
-
-      buttons: [
-        {
-          text: 'Cancela',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-
-          },
-        },
-        {
-          text: 'Ok',
-          handler: (form) => {
-            this.salvar({
-              id: uuid.v4(),
-              qtd: parseInt(form.qtd),
-              descricao: form.descricao,
-              noCarrinho: false,
-              valor: parseFloat(form.valor)
-            })
-          },
-        },
-      ],
-    });
-
-    alert.present();
-  }
-
-  async editarItem(item: Item) {
-    const alert = await this.alertCrtl.create({
-      header: 'Editar ' + item.descricao,
-      mode: 'ios',
-      inputs: [
-        {
-          name: 'qtd',
-          type: 'number',
-          placeholder: 'Informe a quantidade',
-          value: item.qtd,
-        },
-        {
-          name: 'valor',
-          type: 'number',
-          placeholder: 'Informe o valor',
-          value: item.valor
-        },
-        {
-          name: 'descricao',
-          type: 'text',
-          placeholder: 'Informe a descrição do item',
-          value: item.descricao,
-        },
-      ],
-
-      buttons: [
-        {
-          text: 'Cancela',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-
-          },
-        },
-        {
-          text: 'Ok',
-          handler: (form: Item) => {
-            item.descricao = form.descricao
-            item.qtd = form.qtd
-            item.valor = form.valor
-            this.itemService.editar(item)
-          },
-        },
-      ],
-    });
-
-    alert.present();
-  }
-
   async abrirOpcoes(item: Item) {
     const actionSheet = await this.actionSheetCrtl.create({
       mode: 'ios',
@@ -196,7 +102,7 @@ export class HomePage implements OnInit {
           icon: 'pencil',
           handler: () => {
             // this.editarItem(item)
-            this.navCrtl.navigateForward('home/editar/'+item.id)
+            this.navCrtl.navigateForward('home/editar/' + item.id)
           }
         },
         {
