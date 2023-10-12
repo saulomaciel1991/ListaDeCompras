@@ -22,28 +22,7 @@ export class HomePage implements OnInit {
   }
 
   listar() {
-    let value = localStorage.getItem('itens')
-    if (value == null || value == undefined) {
-      return
-    } else {
-      let lista: any[] = JSON.parse(value)
-      this.itens = lista
-    }
-  }
-
-  salvar(item: Item) {
-    let value = localStorage.getItem('itens')
-
-    if (value == null || value == undefined) {
-      this.itens.push(item)
-      localStorage.setItem('itens', JSON.stringify(this.itens))
-    } else {
-      let lista: any[] = JSON.parse(value)
-      lista.push(item)
-      localStorage.setItem('itens', JSON.stringify(lista))
-    }
-
-    this.listar()
+    this.itens = this.itemService.getTodos()
   }
 
   getTotal(){
@@ -54,6 +33,22 @@ export class HomePage implements OnInit {
     })
     
     return this.formatter.format(soma)
+  }
+
+  ordenaPorDescricao() {
+    this.itemService.orderByDescricao()
+    this.listar()
+  }
+
+  ordenaPorQuantidade() {
+    this.itemService.orderByQtd()
+    this.listar()
+  }
+
+  salvar(item: Item) {
+    this.itens.push(item)
+    this.itemService.salvarLista(this.itens)
+    this.listar()
   }
 
   async adicionarItem() {
@@ -209,15 +204,4 @@ export class HomePage implements OnInit {
 
     await actionSheet.present()
   }
-
-  ordenaPorDescricao() {
-    this.itemService.orderByDescricao()
-    this.listar()
-  }
-
-  ordenaPorQuantidade() {
-    this.itemService.orderByQtd()
-    this.listar()
-  }
-
 }

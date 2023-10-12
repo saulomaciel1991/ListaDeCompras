@@ -9,7 +9,7 @@
 <ion-content [fullscreen]="true" mode="ios" id="content">
   <ion-grid mode="ios">
     <ion-row id="row-title" *ngIf="itens.length > 0">
-      <ion-col sizeXs="20">
+      <ion-col sizeXs="19">
         <ion-item color="secondary" (click)="ordenaPorDescricao()">
           Descrição
         </ion-item>
@@ -19,14 +19,14 @@
           Qtd
         </ion-item>
       </ion-col>
-      <ion-col sizeXs="9">
+      <ion-col sizeXs="10">
         <ion-item color="secondary">
           Valor
         </ion-item>
       </ion-col>
     </ion-row>
     <ion-row id="row-detail" *ngFor="let item of itens" (click)="abrirOpcoes(item)">
-      <ion-col sizeXs="20">
+      <ion-col sizeXs="19">
         <ion-item color="danger" *ngIf="item.noCarrinho">
           <del>{{item.descricao}}</del>
         </ion-item>
@@ -42,7 +42,7 @@
           {{item.qtd}}
         </ion-item>
       </ion-col>
-      <ion-col sizeXs="9">
+      <ion-col sizeXs="10">
         <ion-item color="danger" *ngIf="item.noCarrinho">
           <del> {{formatter.format(item.valor)}}</del>
         </ion-item>
