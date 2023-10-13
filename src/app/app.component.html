@@ -1,3 +1,19 @@
+<ion-menu side="start" menuId="m1" contentId="config">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Configurações</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-item lines="none" (click)="retirarTodos()">
+        <ion-label>Retirar todos do carrinho</ion-label>
+        <ion-icon name="trash" slot="start"></ion-icon>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-router-outlet id="config"></ion-router-outlet>
 </ion-app>

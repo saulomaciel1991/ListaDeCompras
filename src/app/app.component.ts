@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ItemService } from './home/item/item.service';
+import { Item } from './home/item/item.model';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,18 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+  constructor( private itemService : ItemService) {}
+  itens : Item[] = []
+
+  retirarTodos(){
+    this.itens = this.itemService.getTodos()
+    this.itens.forEach( el =>{
+      el.noCarrinho = false
+    })
+
+    this.itemService.salvarLista(this.itens)
+    if(this.itens.length > 0){
+      window.location.reload();
+    }
+  }
 }
