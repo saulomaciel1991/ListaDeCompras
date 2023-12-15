@@ -8,11 +8,6 @@
       Lista de Compras
     </ion-title>
 
-    <!-- <ion-buttons slot="primary">
-      <ion-button (click)="menu()">
-        <ion-icon name="settings"></ion-icon>
-      </ion-button>
-    </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 
@@ -40,7 +35,7 @@
         <ion-item color="danger" *ngIf="item.noCarrinho">
           <del>{{item.descricao}}</del>
         </ion-item>
-        <ion-item color="tertiary" *ngIf="item.noCarrinho == false">
+        <ion-item color="tertiary" *ngIf="item.noCarrinho === false">
           {{item.descricao}}
         </ion-item>
       </ion-col>
@@ -48,7 +43,7 @@
         <ion-item color="danger" *ngIf="item.noCarrinho">
           <del>{{item.qtd}}</del>
         </ion-item>
-        <ion-item color="tertiary" *ngIf="item.noCarrinho == false">
+        <ion-item color="tertiary" *ngIf="item.noCarrinho === false">
           {{item.qtd}}
         </ion-item>
       </ion-col>
@@ -56,7 +51,7 @@
         <ion-item color="danger" *ngIf="item.noCarrinho">
           <del> {{formatter.format(item.valor)}}</del>
         </ion-item>
-        <ion-item color="tertiary" *ngIf="item.noCarrinho == false">
+        <ion-item color="tertiary" *ngIf="item.noCarrinho === false">
           {{formatter.format(item.valor)}}
         </ion-item>
       </ion-col>
@@ -75,7 +70,7 @@
     </ion-row>
   </ion-grid>
 
-  <ion-item *ngIf="itens.length == 0">
+  <ion-item *ngIf="itens.length === 0">
     <ion-label class="ion-text-center">
       <h1>
         Lista vazia!
