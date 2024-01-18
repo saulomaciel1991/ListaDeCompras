@@ -10,7 +10,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "ion": "ionic serve --no-open"
+    "ion": "ionic serve --no-open",
+    "ionb": "ionic cap build android"
   },
   "private": true,
   "dependencies": {
