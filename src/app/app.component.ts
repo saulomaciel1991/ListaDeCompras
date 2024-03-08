@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { Item } from './home/item/item.model';
 import { ItemService } from './home/item/item.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { ItemService } from './home/item/item.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private itemService: ItemService) {}
+  constructor(private itemService: ItemService, private http : HttpClient) {}
   itens: Item[] = [];
 
   retirarTodos() {
@@ -48,18 +49,31 @@ export class AppComponent {
     });
   };
 
-  restaurarBackup = async () => {
-    const contents = await Filesystem.readFile({
-      path: 'itens.json',
-      directory: Directory.Documents,
-      encoding: Encoding.UTF8,
-    });
+  // restaurarBackup = async () => {
+  //   const contents = await Filesystem.readFile({
+  //     path: 'itens.json',
+  //     directory: Directory.Documents,
+  //     encoding: Encoding.UTF8,
+  //   });
 
-    let itens = JSON.stringify(contents);
-    let it = JSON.parse(itens);
-    it = JSON.parse(it.data);
-    localStorage.setItem('itens', JSON.stringify(it));
-    this.log(itens)
-    window.location.reload();
-  };
+  //   let itens = JSON.stringify(contents);
+  //   let it = JSON.parse(itens);
+  //   it = JSON.parse(it.data);
+  //   localStorage.setItem('itens', JSON.stringify(it));
+  //   this.log(itens)
+  //   window.location.reload();
+  // };
+
+  restaurarBackup(){
+    const url : string = '/assets/itens.json'
+    
+    let ret = this.http.get(url).subscribe({
+      next: (data) => {
+        if (data != undefined && data != null){
+          localStorage.setItem('itens', JSON.stringify(data))
+        }
+      }
+    })
+    return ret 
+  }
 }
