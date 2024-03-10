@@ -67,31 +67,6 @@ export class HomePage implements OnInit {
     this.itemService.salvarLista(this.itens);
   }
 
-  // async menu() {
-  //   const actionSheet = await this.actionSheetCrtl.create({
-  //     mode: 'ios',
-  //     header: 'Configurações',
-  //     buttons: [
-  //       {
-  //         text: 'Retirar Todos do Carrinho',
-  //         icon: 'trash',
-  //         handler: () => {
-  //           this.retirarTodosDoCarrinho()
-  //         }
-  //       },
-  //       {
-  //         text: 'Cancelar',
-  //         icon: 'close',
-  //         role: 'cancel',
-  //         handler: () => {
-  //         }
-  //       }
-  //     ]
-  //   })
-
-  //   await actionSheet.present()
-  // }
-
   async abrirOpcoes(item: Item) {
     const actionSheet = await this.actionSheetCrtl.create({
       mode: 'ios',

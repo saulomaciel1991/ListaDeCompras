@@ -23,12 +23,28 @@ export class ItemService {
       });
       localStorage.setItem('itens', JSON.stringify(lista));
     }
+
+    this.orderByDescricao()
   }
 
   salvarLista(itens: Item[]): void {
-    itens.forEach( el =>{
-      el.descricao = el.descricao.toUpperCase()
-    })
+    debugger;
+    let itensNoCarrinho: Item[] = [];
+    itens.forEach((el) => {
+      el.descricao = el.descricao.toUpperCase();
+      if (el.noCarrinho === true) {
+        itensNoCarrinho.push(el);
+      }
+    });
+
+    itens = itens.filter((el) => {
+      return el.noCarrinho === false;
+    });
+
+    itensNoCarrinho.forEach((el) => {
+      itens.push(el);
+    });
+
     localStorage.setItem('itens', JSON.stringify(itens));
   }
 
@@ -38,19 +54,31 @@ export class ItemService {
       return;
     } else {
       let lista: any[] = JSON.parse(value);
-
       lista.sort((a, b) => {
-        const nameA = a.descricao.toUpperCase(); // ignore upper and lowercase
-        const nameB = b.descricao.toUpperCase(); // ignore upper and lowercase
-        if (nameA < nameB || a.noCarrinho - b.noCarrinho) {
-          return -1;
-        }
-        if (nameA > nameB || b.noCarrinho - a.noCarrinho) {
-          return 1;
-        }
+        let ret = 0;
 
-        // names must be equal
-        return 0;
+        if (a.descricao < b.descricao) {
+          ret = -1;
+        }
+        return ret;
+      });
+      this.salvarLista(lista);
+    }
+  }
+
+  orderByNoCarrinho() {
+    let value = localStorage.getItem('itens');
+    if (value == null || value == undefined) {
+      return;
+    } else {
+      let lista: any[] = JSON.parse(value);
+      lista.sort((a, b) => {
+        let ret = 0;
+
+        if (a.noCarrinho < b.noCarrinho) {
+          ret = 1;
+        }
+        return ret;
       });
       this.salvarLista(lista);
     }
