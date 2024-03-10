@@ -1,8 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { Item } from './home/item/item.model';
 import { ItemService } from './home/item/item.service';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -74,6 +74,7 @@ export class AppComponent {
         }
       }
     })
+    window.location.reload();
     return ret 
   }
 }
