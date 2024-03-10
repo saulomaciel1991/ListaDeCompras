@@ -26,6 +26,11 @@
         <ion-input [(ngModel)]="valor" type="number" inputmode="decimal" (keypress)="onEnter($event.keyCode)"></ion-input>
       </ion-item>
 
+      <ion-item>
+        <ion-label>No carrinho?</ion-label>
+        <ion-checkbox [(ngModel)]="noCarrinho"></ion-checkbox>
+      </ion-item>
+
       <ion-button expand="block" fill="clear" shape="round" (click)="salvar()">
         Salvar
       </ion-button>

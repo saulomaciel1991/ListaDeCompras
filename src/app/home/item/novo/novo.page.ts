@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Item } from '../item.model';
-import * as uuid from 'uuid';
-import { ItemService } from '../item.service';
 import { NavController, ToastController } from '@ionic/angular';
+import * as uuid from 'uuid';
+import { Item } from '../item.model';
+import { ItemService } from '../item.service';
 
 @Component({
   selector: 'app-novo',
@@ -15,6 +15,7 @@ export class NovoPage implements OnInit {
   qtd!: number
   valor!: number
   descricao!: string
+  noCarrinho!: boolean
   @ViewChild('qtdInput') myInput!: any
 
   constructor(private itemService: ItemService, private navCrtl: NavController, private toastCrtl : ToastController) { }
@@ -40,7 +41,7 @@ export class NovoPage implements OnInit {
       this.item = {
         id: uuid.v4(),
         descricao: this.primeiraMaiuscula(this.descricao),
-        noCarrinho: false,
+        noCarrinho: this.noCarrinho,
         qtd: this.qtd,
         valor: this.valor == null ? 0 : this.valor
       }

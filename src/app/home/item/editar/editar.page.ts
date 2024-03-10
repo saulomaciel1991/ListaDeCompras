@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Item } from '../item.model';
-import * as uuid from 'uuid';
-import { ItemService } from '../item.service';
-import { NavController, ToastController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
+import { NavController, ToastController } from '@ionic/angular';
+import { Item } from '../item.model';
+import { ItemService } from '../item.service';
 
 @Component({
   selector: 'app-editar',
@@ -17,6 +16,8 @@ export class EditarPage implements OnInit {
   qtd!: number
   valor!: number
   descricao!: string
+  noCarrinho!: boolean
+  
   @ViewChild('qtdInput') myInput!: any
 
   constructor(
@@ -41,6 +42,7 @@ export class EditarPage implements OnInit {
       this.descricao = this.item.descricao
       this.qtd = this.item.qtd
       this.valor = this.item.valor
+      this.noCarrinho = this.item.noCarrinho
     })
   }
 
@@ -65,6 +67,7 @@ export class EditarPage implements OnInit {
           el.descricao = this.primeiraMaiuscula(this.descricao)
           el.qtd = this.qtd
           el.valor = this.valor == null ? 0 : this.valor
+          el.noCarrinho = this.noCarrinho
         }
       })
 
