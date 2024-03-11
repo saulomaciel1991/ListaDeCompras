@@ -14,24 +14,29 @@
 <ion-content [fullscreen]="true" mode="ios" id="content">
   <ion-grid mode="ios">
     <ion-row id="row-title" *ngIf="itens.length > 0">
-      <ion-col sizeXs="19">
+      <ion-col sizeXs="14">
         <ion-item color="secondary" (click)="ordenaPorDescricao()">
-          Descrição
+          DESCRIÇÃO
         </ion-item>
       </ion-col>
-      <ion-col sizeXs="7">
+      <ion-col sizeXs="6">
         <ion-item color="secondary" (click)="ordenaPorQuantidade()">
-          Qtd
+          QTD
+        </ion-item>
+      </ion-col>
+      <ion-col sizeXs="6">
+        <ion-item color="secondary">
+          VALOR
         </ion-item>
       </ion-col>
       <ion-col sizeXs="10">
         <ion-item color="secondary">
-          Valor
+          CATEGORIA
         </ion-item>
       </ion-col>
     </ion-row>
     <ion-row id="row-detail" *ngFor="let item of itens" (click)="abrirOpcoes(item)">
-      <ion-col sizeXs="19">
+      <ion-col sizeXs="14">
         <ion-item color="danger" *ngIf="item.noCarrinho">
           <del>{{item.descricao}}</del>
         </ion-item>
@@ -39,7 +44,7 @@
           {{item.descricao}}
         </ion-item>
       </ion-col>
-      <ion-col sizeXs="7">
+      <ion-col sizeXs="6">
         <ion-item color="danger" *ngIf="item.noCarrinho">
           <del>{{item.qtd}}</del>
         </ion-item>
@@ -47,12 +52,20 @@
           {{item.qtd}}
         </ion-item>
       </ion-col>
-      <ion-col sizeXs="10">
+      <ion-col sizeXs="6">
         <ion-item color="danger" *ngIf="item.noCarrinho">
           <del> {{formatter.format(item.valor)}}</del>
         </ion-item>
         <ion-item color="tertiary" *ngIf="item.noCarrinho === false">
           {{formatter.format(item.valor)}}
+        </ion-item>
+      </ion-col>
+      <ion-col sizeXs="10">
+        <ion-item color="danger" *ngIf="item.noCarrinho">
+          <del>{{item.categoria}}</del>
+        </ion-item>
+        <ion-item color="tertiary" *ngIf="item.noCarrinho === false">
+          {{item.categoria}}
         </ion-item>
       </ion-col>
     </ion-row>

@@ -15,8 +15,9 @@ export class NovoPage implements OnInit {
   qtd!: number
   valor!: number
   descricao!: string
+  categoria!: string
   noCarrinho!: boolean
-  @ViewChild('qtdInput') myInput!: any
+  @ViewChild('descrInput') myInput!: any
 
   constructor(private itemService: ItemService, private navCrtl: NavController, private toastCrtl : ToastController) { }
 
@@ -41,11 +42,11 @@ export class NovoPage implements OnInit {
       this.item = {
         id: uuid.v4(),
         descricao: this.primeiraMaiuscula(this.descricao),
-        noCarrinho: this.noCarrinho,
+        noCarrinho: this.noCarrinho == undefined ? false : this.noCarrinho,
         qtd: this.qtd,
-        valor: this.valor == null ? 0 : this.valor
+        valor: this.valor == null ? 0 : this.valor,
+        categoria: this.categoria.toUpperCase()
       }
-
       this.itens.push(this.item)
       this.itemService.salvarLista(this.itens)
       this.navCrtl.navigateBack("/home")

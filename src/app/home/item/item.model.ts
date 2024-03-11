@@ -4,4 +4,5 @@ export interface Item {
     valor: number
     descricao: string
     noCarrinho: boolean
+    categoria: string
 }

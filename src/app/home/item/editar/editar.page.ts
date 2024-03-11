@@ -16,9 +16,10 @@ export class EditarPage implements OnInit {
   qtd!: number
   valor!: number
   descricao!: string
+  categoria!: string
   noCarrinho!: boolean
   
-  @ViewChild('qtdInput') myInput!: any
+  @ViewChild('descrInput') myInput!: any
 
   constructor(
     private itemService: ItemService,
@@ -43,6 +44,7 @@ export class EditarPage implements OnInit {
       this.qtd = this.item.qtd
       this.valor = this.item.valor
       this.noCarrinho = this.item.noCarrinho
+      this.categoria = this.item.categoria
     })
   }
 
@@ -68,6 +70,7 @@ export class EditarPage implements OnInit {
           el.qtd = this.qtd
           el.valor = this.valor == null ? 0 : this.valor
           el.noCarrinho = this.noCarrinho
+          el.categoria = this.categoria.toUpperCase()
         }
       })
 
