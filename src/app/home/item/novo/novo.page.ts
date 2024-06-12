@@ -41,6 +41,7 @@ export class NovoPage implements OnInit {
   salvar() {
 
     if (this.descricao != null && this.qtd > 0) {
+      this.categoria = 'Outros'
       this.item = {
         id: uuid.v4(),
         descricao: this.primeiraMaiuscula(this.descricao),

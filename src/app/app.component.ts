@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { Item } from './home/item/item.model';
 import { ItemService } from './home/item/item.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,7 @@ import { ItemService } from './home/item/item.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private itemService: ItemService, private http : HttpClient) {}
+  constructor(private itemService: ItemService, private http: HttpClient, private alertController: AlertController) {}
   itens: Item[] = [];
 
   retirarTodos() {
@@ -25,20 +26,64 @@ export class AppComponent {
     }
   }
 
-  fazerBackup = async () => {
+  fazerBackup = async (fileNameUser?: string) => {
     let dados = localStorage.getItem('itens');
 
     if (dados == null || dados == undefined) {
       return;
     } else {
+      // Nome do arquivo: usa o fornecido pelo usuário ou um nome padrão
+      const fileName = fileNameUser ? fileNameUser : 'itens.json';
+
       await Filesystem.writeFile({
-        path: 'itens.json',
+        path: fileName,
         data: dados,
         directory: Directory.Documents,
         encoding: Encoding.UTF8,
       });
+
+      console.log('Backup criado com sucesso em ' + fileName);
     }
   };
+
+  async solicitarNomeBackup() {
+    const alert = await this.alertController.create({
+      header: 'Nome do Backup',
+      inputs: [
+        {
+          name: 'fileName',
+          type: 'text',
+          placeholder: 'Digite o nome do arquivo de backup'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Operação cancelada');
+          }
+        }, {
+          text: 'Salvar',
+          handler: (data) => {
+            const fileName = data.fileName ? `${data.fileName}.json` : undefined;
+            this.fazerBackupComNome(fileName);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async fazerBackupComNome(fileName?: string) {
+    try {
+      await this.fazerBackup(fileName);
+    } catch (error) {
+      console.error('Erro ao fazer backup', error);
+    }
+  }
 
   log = async (dados: string) => {
     await Filesystem.writeFile({
@@ -49,32 +94,17 @@ export class AppComponent {
     });
   };
 
-  // restaurarBackup = async () => {
-  //   const contents = await Filesystem.readFile({
-  //     path: 'itens.json',
-  //     directory: Directory.Documents,
-  //     encoding: Encoding.UTF8,
-  //   });
+  restaurarBackup() {
+    const url: string = '/assets/itens.json';
 
-  //   let itens = JSON.stringify(contents);
-  //   let it = JSON.parse(itens);
-  //   it = JSON.parse(it.data);
-  //   localStorage.setItem('itens', JSON.stringify(it));
-  //   this.log(itens)
-  //   window.location.reload();
-  // };
-
-  restaurarBackup(){
-    const url : string = '/assets/itens.json'
-    
     let ret = this.http.get(url).subscribe({
       next: (data) => {
-        if (data != undefined && data != null){
-          localStorage.setItem('itens', JSON.stringify(data))
+        if (data != undefined && data != null) {
+          localStorage.setItem('itens', JSON.stringify(data));
         }
-      }
-    })
+      },
+    });
     window.location.reload();
-    return ret 
+    return ret;
   }
 }
