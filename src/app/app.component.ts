@@ -94,17 +94,25 @@ export class AppComponent {
     });
   };
 
-  restaurarBackup() {
-    const url: string = '/assets/itens.json';
+  restaurarBackup(event: any) {
+    const file = event.target.files[0];
+    if (!file) {
+      console.error("Nenhum arquivo selecionado.");
+      return;
+    }
 
-    let ret = this.http.get(url).subscribe({
-      next: (data) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result as string);
         if (data != undefined && data != null) {
           localStorage.setItem('itens', JSON.stringify(data));
+          window.location.reload();
         }
-      },
-    });
-    window.location.reload();
-    return ret;
+      } catch (error) {
+        console.error("Erro ao ler o arquivo de backup: ", error);
+      }
+    };
+    reader.readAsText(file);
   }
 }
