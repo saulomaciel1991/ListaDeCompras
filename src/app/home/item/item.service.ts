@@ -28,7 +28,6 @@ export class ItemService {
   }
 
   salvarLista(itens: Item[]): void {
-    debugger;
     let itensNoCarrinho: Item[] = [];
     itens.forEach((el) => {
       el.descricao = el.descricao.toUpperCase();

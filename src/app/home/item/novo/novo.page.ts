@@ -17,6 +17,7 @@ export class NovoPage implements OnInit {
   descricao!: string
   noCarrinho!: boolean
   @ViewChild('qtdInput') myInput!: any
+  @ViewChild('descInput') descInput!: any
 
   constructor(private itemService: ItemService, private navCrtl: NavController, private toastCrtl : ToastController) { }
 
@@ -26,7 +27,8 @@ export class NovoPage implements OnInit {
 
   ionViewDidEnter() {
     this.itens = this.itemService.getTodos()
-    this.myInput.setFocus();
+    this.descInput.setFocus();
+    this.noCarrinho = false
   }
 
   onEnter(event: any) {
