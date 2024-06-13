@@ -14,29 +14,29 @@
 <ion-content [fullscreen]="true" mode="ios" id="content">
   <ion-grid mode="ios">
     <ion-row id="row-title" *ngIf="itens.length > 0">
-      <ion-col sizeXs="20">
+      <ion-col sizeXs="20" sizeSm="15">
         <ion-item color="secondary" (click)="ordenaPorDescricao()">
           DESCRIÇÃO
         </ion-item>
       </ion-col>
-      <ion-col sizeXs="6">
+      <ion-col sizeXs="6" sizeSm="6">
         <ion-item color="secondary" (click)="ordenaPorQuantidade()">
           QTD
         </ion-item>
       </ion-col>
-      <ion-col sizeXs="10">
+      <ion-col sizeXs="10" sizeSm="8">
         <ion-item color="secondary">
           VALOR
         </ion-item>
       </ion-col>
-      <!-- <ion-col sizeXs="10">
+      <ion-col sizeSm="7" class="ion-hide-sm-down">
         <ion-item color="secondary">
           CATEGORIA
         </ion-item>
-      </ion-col> -->
+      </ion-col>
     </ion-row>
     <ion-row id="row-detail" *ngFor="let item of itens" (click)="abrirOpcoes(item)">
-      <ion-col sizeXs="20">
+      <ion-col sizeXs="20" sizeSm="15">
         <ion-item color="danger" *ngIf="item.noCarrinho">
           <del>{{item.descricao}}</del>
         </ion-item>
@@ -44,7 +44,7 @@
           {{item.descricao}}
         </ion-item>
       </ion-col>
-      <ion-col sizeXs="6">
+      <ion-col sizeXs="6" sizeSm="6">
         <ion-item color="danger" *ngIf="item.noCarrinho">
           <del>{{item.qtd}}</del>
         </ion-item>
@@ -52,22 +52,22 @@
           {{item.qtd}}
         </ion-item>
       </ion-col>
-      <ion-col sizeXs="10">
+      <ion-col sizeXs="10" sizeSm="8">
         <ion-item color="danger" *ngIf="item.noCarrinho">
-          <del> {{formatter.format(item.valor)}}</del>
+          <del>{{formatter.format(item.valor)}}</del>
         </ion-item>
         <ion-item color="tertiary" *ngIf="item.noCarrinho === false">
           {{formatter.format(item.valor)}}
         </ion-item>
       </ion-col>
-      <!-- <ion-col sizeXs="10">
+      <ion-col sizeSm="7" class="ion-hide-sm-down">
         <ion-item color="danger" *ngIf="item.noCarrinho">
           <del>{{item.categoria}}</del>
         </ion-item>
         <ion-item color="tertiary" *ngIf="item.noCarrinho === false">
           {{item.categoria}}
         </ion-item>
-      </ion-col> -->
+      </ion-col>
     </ion-row>
     <ion-row class="ion-padding" *ngIf="itens.length > 0">
       <ion-col sizeXs="12">
@@ -92,7 +92,6 @@
   </ion-item>
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <!-- <ion-fab-button (click)="adicionarItem()"> -->
     <ion-fab-button routerLink="/home/novo">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
