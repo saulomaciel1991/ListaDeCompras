@@ -1,44 +1,117 @@
-$color-primary: #3880ff;
-$color-secondary: #3dc2ff;
-$color-tertiary: #5260ff;
+// Definindo variáveis para cores
+$primary-color: #3498db;
+$secondary-color: #2ecc71;
+$danger-color: #e74c3c;
+$warning-color: #f39c12;
+$tertiary-color: #9b59b6;
+$text-color: #ffffff;
+$background-color: #000000;
 
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+// Estilos globais
+* {
+  box-sizing: border-box;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
+body {
+  font-family: Arial, sans-serif;
+  background-color: $background-color;
   margin: 0;
+  padding: 0;
+  color: $text-color;
 }
 
-#container a {
-  text-decoration: none;
+// Estilo do cabeçalho
+ion-header {
+  ion-toolbar {
+    background-color: $primary-color;
+    color: $text-color;
+    ion-title {
+      text-align: center;
+      font-size: 1.5em;
+    }
+  }
 }
 
-ion-grid {
-  --ion-grid-columns: 36;
+// Estilo do conteúdo
+ion-content {
+  padding: 1rem;
+  background-color: $background-color;
+  ion-grid {
+    background-color: $background-color;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --ion-grid-columns: 36;
+  }
 }
 
-ion-col{
-  border: 1px solid gray;
-  border-radius: 10px;
+// Estilo das linhas
+ion-row {
+  border-bottom: 1px solid #ccc;
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
-ion-item{
-  border-radius: 10px;
+// Estilo das colunas
+ion-col {
+  padding: 0.5rem;
+
+  ion-item {
+    background-color: transparent;
+    color: $text-color;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+
+    &.color-secondary {
+      background-color: $secondary-color;
+    }
+
+    &.color-danger {
+      background-color: $danger-color;
+    }
+
+    &.color-tertiary {
+      background-color: $tertiary-color;
+    }
+
+    &.color-warning {
+      background-color: $warning-color;
+    }
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+
+    del {
+      color: lighten($danger-color, 20%);
+    }
+  }
+}
+
+// Estilo para o item vazio
+ion-item {
+  &.ion-text-center {
+    h1 {
+      color: $danger-color;
+      font-size: 1.2em;
+      margin: 1rem 0;
+    }
+  }
+}
+
+// Estilo para o botão flutuante
+ion-fab-button {
+  ion-icon {
+    font-size: 1.5em;
+  }
+}
+
+// Estilo para o total
+.ion-padding {
+  ion-item {
+    background-color: $warning-color;
+    color: $text-color;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
 }
