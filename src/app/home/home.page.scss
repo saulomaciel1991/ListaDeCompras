@@ -14,7 +14,7 @@ $background-color: #000000;
 
 body {
   font-family: Arial, sans-serif;
-  background-color: $background-color;
+  // background-color: $background-color;
   margin: 0;
   padding: 0;
   color: $text-color;
@@ -23,7 +23,7 @@ body {
 // Estilo do cabeçalho
 ion-header {
   ion-toolbar {
-    background-color: $primary-color;
+    // background-color: $primary-color;
     color: $text-color;
     ion-title {
       text-align: center;
@@ -35,9 +35,9 @@ ion-header {
 // Estilo do conteúdo
 ion-content {
   padding: 1rem;
-  background-color: $background-color;
+  // background-color: $background-color;
   ion-grid {
-    background-color: $background-color;
+    // background-color: $background-color;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     --ion-grid-columns: 36;

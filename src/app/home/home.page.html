@@ -1,15 +1,18 @@
 <ion-header [translucent]="true" mode="ios">
-  <ion-toolbar color="primary" mode="ios">
-    <ion-buttons slot="start">
-      <ion-menu-button menu="m1"></ion-menu-button>
-    </ion-buttons>
-    
-    <ion-title>
+  <ion-toolbar color="primary" mode="ios" style="box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <ion-title style="font-family: 'Arial', sans-serif; font-size: 24px; text-align: center; display: flex; justify-content: center; align-items: center;">
+      <ion-icon name="cart" style="margin-right: 10px;"></ion-icon>
       Lista de Compras
     </ion-title>
-
+    
+    <ion-buttons slot="end">
+      <ion-menu-button menu="m1">
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-menu-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content [fullscreen]="true" mode="ios" id="content">
   <ion-grid mode="ios">
