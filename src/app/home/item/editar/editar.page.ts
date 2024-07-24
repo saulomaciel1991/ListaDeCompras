@@ -61,10 +61,9 @@ export class EditarPage implements OnInit {
   }
 
   salvar() {
-
+    
     if (this.descricao != null && this.qtd > 0) {
 
-      this.categoria = 'Outros'
       this.itens.find(el => {
         if (el.id == this.item.id) {
           el.descricao = this.primeiraMaiuscula(this.descricao)
