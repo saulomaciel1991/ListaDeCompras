@@ -53,6 +53,11 @@ export class HomePage implements OnInit {
     this.listar();
   }
 
+  ordenaPorCategoria() {
+    this.itemService.orderByCategoria();
+    this.listar();
+  }
+
   salvar(item: Item) {
     this.itens.push(item);
     this.itemService.salvarLista(this.itens);

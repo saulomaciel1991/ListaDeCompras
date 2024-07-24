@@ -94,6 +94,24 @@ export class ItemService {
     }
   }
 
+  orderByCategoria(){
+    let value = localStorage.getItem('itens');
+    if (value == null || value == undefined) {
+      return;
+    } else {
+      let lista: any[] = JSON.parse(value);
+      lista.sort((a, b) => {
+        let ret = 0;
+
+        if (a.categoria < b.categoria) {
+          ret = -1;
+        }
+        return ret;
+      });
+      this.salvarLista(lista);
+    }
+  }
+
   getTodos(): Item[] {
     let value = localStorage.getItem('itens');
 
