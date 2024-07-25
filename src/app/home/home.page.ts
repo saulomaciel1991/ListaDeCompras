@@ -64,14 +64,6 @@ export class HomePage implements OnInit {
     this.listar();
   }
 
-  retirarTodosDoCarrinho() {
-    this.itens.forEach((e) => {
-      e.noCarrinho = false;
-    });
-
-    this.itemService.salvarLista(this.itens);
-  }
-
   filtrar(event : any) {
     const query = event.target.value.toLowerCase();
     this.itens = this.itens.filter((d) => d.descricao.toLowerCase().indexOf(query) > -1 || d.categoria.toLowerCase().indexOf(query) > -1);
