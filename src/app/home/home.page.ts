@@ -74,7 +74,7 @@ export class HomePage implements OnInit {
 
   filtrar(event : any) {
     const query = event.target.value.toLowerCase();
-    this.itens = this.itens.filter((d) => d.descricao.toLowerCase().indexOf(query) > -1);
+    this.itens = this.itens.filter((d) => d.descricao.toLowerCase().indexOf(query) > -1 || d.categoria.toLowerCase().indexOf(query) > -1);
   }
 
   limpar(event : any){
