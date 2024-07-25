@@ -72,6 +72,15 @@ export class HomePage implements OnInit {
     this.itemService.salvarLista(this.itens);
   }
 
+  filtrar(event : any) {
+    const query = event.target.value.toLowerCase();
+    this.itens = this.itens.filter((d) => d.descricao.toLowerCase().indexOf(query) > -1);
+  }
+
+  limpar(event : any){
+    this.listar()
+  }
+
   async abrirOpcoes(item: Item) {
     const actionSheet = await this.actionSheetCrtl.create({
       mode: 'ios',
