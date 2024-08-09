@@ -10,6 +10,8 @@ import { ItemService } from './item/item.service';
 })
 export class HomePage implements OnInit {
   itens: Item[] = [];
+  lista: Item[] = [];
+
   constructor(
     private actionSheetCrtl: ActionSheetController,
     private itemService: ItemService,
@@ -64,13 +66,27 @@ export class HomePage implements OnInit {
     this.listar();
   }
 
-  filtrar(event : any) {
+  filtrar(event: any) {
     const query = event.target.value.toLowerCase();
-    this.itens = this.itens.filter((d) => d.descricao.toLowerCase().indexOf(query) > -1 || d.categoria.toLowerCase().indexOf(query) > -1);
+    
+    this.setlista(this.itens)
+    
+    this.itens = this.lista.filter(
+      (d) =>
+        d.descricao.toLowerCase().indexOf(query) > -1 ||
+        d.categoria.toLowerCase().indexOf(query) > -1
+    );
   }
 
-  limpar(event : any){
-    this.listar()
+  limpar(event: any) {
+    this.listar();
+  }
+
+  setlista(itens: Item[]) {
+    debugger
+    if (this.lista.length === 0){
+      this.lista = itens
+    }
   }
 
   async abrirOpcoes(item: Item) {
