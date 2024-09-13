@@ -18,7 +18,7 @@ export class EditarPage implements OnInit {
   descricao!: string
   categoria!: string
   noCarrinho!: boolean
-  
+
   @ViewChild('descrInput') myInput!: any
 
   constructor(
@@ -61,7 +61,7 @@ export class EditarPage implements OnInit {
   }
 
   salvar() {
-    
+
     if (this.descricao != null && this.qtd > 0) {
 
       this.itens.find(el => {
@@ -70,7 +70,7 @@ export class EditarPage implements OnInit {
           el.qtd = this.qtd
           el.valor = this.valor == null ? 0 : this.valor
           el.noCarrinho = this.noCarrinho
-          el.categoria = this.categoria.toUpperCase()
+          el.categoria = this.categoria
         }
       })
 

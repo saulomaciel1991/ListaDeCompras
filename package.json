@@ -33,6 +33,7 @@
     "@ionic/angular": "^7.0.0",
     "@maskito/core": "^1.7.0",
     "ionicons": "^7.0.0",
+    "ListaDeCompras": "file:",
     "ng2-currency-mask": "^13.0.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
