@@ -44,7 +44,7 @@ export class EditarPage implements OnInit {
       this.qtd = this.item.qtd
       this.valor = this.item.valor
       this.noCarrinho = this.item.noCarrinho
-      this.categoria = this.item.categoria
+      this.categoria = this.item.categoria.toLowerCase()
     })
   }
 

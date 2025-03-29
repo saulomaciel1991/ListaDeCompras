@@ -1,9 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Produto</ion-title>
-  <ion-buttons slot="start">
-    <ion-back-button defaultHref="/home"></ion-back-button>
-  </ion-buttons>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -20,7 +20,8 @@
       </ion-item>
 
       <ion-item>
-        <ion-select [(ngModel)]="this.categoria" label="Categoria" placeholder="Categoria" (ionChange)="selecionaCategoria($event)">
+        <ion-select [value]="categoria" arial-label="Categoria" interface="modal" placeholder="Categoria"
+          (ionChange)="selecionaCategoria($event)">
           <ion-select-option value="base">BASE</ion-select-option>
           <ion-select-option value="biscoitos">BISCOITOS</ion-select-option>
           <ion-select-option value="carnes">CARNES</ion-select-option>
@@ -42,7 +43,8 @@
 
       <ion-item>
         <ion-label position="floating">Preço</ion-label>
-        <ion-input [(ngModel)]="valor" type="number" inputmode="decimal" (keypress)="onEnter($event.keyCode)"></ion-input>
+        <ion-input [(ngModel)]="valor" type="number" inputmode="decimal"
+          (keypress)="onEnter($event.keyCode)"></ion-input>
       </ion-item>
 
       <ion-item>
