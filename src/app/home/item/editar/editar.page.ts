@@ -18,7 +18,7 @@ export class EditarPage implements OnInit {
   descricao!: string
   categoria!: string
   noCarrinho!: boolean
-  
+
   @ViewChild('descrInput') myInput!: any
 
   constructor(
@@ -44,7 +44,7 @@ export class EditarPage implements OnInit {
       this.qtd = this.item.qtd
       this.valor = this.item.valor
       this.noCarrinho = this.item.noCarrinho
-      this.categoria = this.item.categoria
+      this.categoria = this.item.categoria.toLowerCase()
     })
   }
 
@@ -60,8 +60,13 @@ export class EditarPage implements OnInit {
     }
   }
 
+  selecionaCategoria(event: any) {
+    const categoriaSelecionada = event.detail.value;
+    this.categoria = categoriaSelecionada;
+  }
+
   salvar() {
-    
+
     if (this.descricao != null && this.qtd > 0) {
 
       this.itens.find(el => {
@@ -70,7 +75,7 @@ export class EditarPage implements OnInit {
           el.qtd = this.qtd
           el.valor = this.valor == null ? 0 : this.valor
           el.noCarrinho = this.noCarrinho
-          el.categoria = this.categoria.toUpperCase()
+          el.categoria = this.categoria
         }
       })
 

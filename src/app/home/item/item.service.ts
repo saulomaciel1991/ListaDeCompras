@@ -34,6 +34,10 @@ export class ItemService {
       if (el.noCarrinho === true) {
         itensNoCarrinho.push(el);
       }
+      if (el.categoria === undefined || el.categoria === null || el.categoria === ''){
+        el.categoria = 'OUTROS'
+      }
+      el.categoria = el.categoria.toUpperCase()
     });
 
     itens = itens.filter((el) => {

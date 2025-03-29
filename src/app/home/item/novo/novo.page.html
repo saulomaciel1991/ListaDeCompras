@@ -1,9 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Produto</ion-title>
-  <ion-buttons slot="start">
-    <ion-back-button defaultHref="/home"></ion-back-button>
-  </ion-buttons>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -13,25 +13,37 @@
       <ion-card-title>Novo Produto</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      
+
       <ion-item>
         <ion-label position="floating">Descrição</ion-label>
         <ion-input [(ngModel)]="descricao" type="text" (keypress)="onEnter($event.keyCode)" #descInput></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">Categoria</ion-label>
-        <ion-input [(ngModel)]="categoria" type="text" (keypress)="onEnter($event.keyCode)"></ion-input>
+        <ion-select arial-label="Categoria" interface="modal" placeholder="Categoria" (ionChange)="selecionaCategoria($event)">
+          <ion-select-option value="base">BASE</ion-select-option>
+          <ion-select-option value="biscoitos">BISCOITOS</ion-select-option>
+          <ion-select-option value="carnes">CARNES</ion-select-option>
+          <ion-select-option value="frios">FRIOS</ion-select-option>
+          <ion-select-option value="higiene">HIGIENE</ion-select-option>
+          <ion-select-option value="hortifrutti">HORTIFRUTTI</ion-select-option>
+          <ion-select-option value="infantil">INFANTIL</ion-select-option>
+          <ion-select-option value="limpeza">LIMPEZA</ion-select-option>
+          <ion-select-option value="outros">OUTROS</ion-select-option>
+          <ion-select-option value="pães">PÃES</ion-select-option>
+          <ion-select-option value="temperos">TEMPEROS</ion-select-option>
+        </ion-select>
       </ion-item>
-      
+
       <ion-item>
         <ion-label position="floating">Quantidade</ion-label>
-        <ion-input [(ngModel)]="qtd" type="number" ></ion-input>
+        <ion-input [(ngModel)]="qtd" type="number"></ion-input>
       </ion-item>
-      
+
       <ion-item>
         <ion-label position="floating">Preço</ion-label>
-        <ion-input [(ngModel)]="valor" type="number" inputmode="decimal" (keypress)="onEnter($event.keyCode)"></ion-input>
+        <ion-input [(ngModel)]="valor" type="number" inputmode="decimal"
+          (keypress)="onEnter($event.keyCode)"></ion-input>
       </ion-item>
 
       <ion-item>
