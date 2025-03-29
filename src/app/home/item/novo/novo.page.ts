@@ -38,16 +38,21 @@ export class NovoPage implements OnInit {
     }
   }
 
+  selecionaCategoria(event: any) {
+    const categoriaSelecionada = event.detail.value;
+    this.categoria = categoriaSelecionada;
+  }
+
   salvar() {
-    
+
     if (this.descricao != null && this.qtd > 0) {
       this.item = {
         id: uuid.v4(),
         descricao: this.primeiraMaiuscula(this.descricao),
         noCarrinho: this.noCarrinho == undefined ? false : this.noCarrinho,
+        categoria: this.categoria,
         qtd: this.qtd,
-        valor: this.valor == null ? 0 : this.valor,
-        categoria: this.categoria.toUpperCase()
+        valor: this.valor == null ? 0 : this.valor
       }
       this.itens.push(this.item)
       this.itemService.salvarLista(this.itens)

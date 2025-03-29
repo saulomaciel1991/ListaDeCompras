@@ -16,7 +16,7 @@ export class AppComponent {
 
   retirarTodos() {
     this.itens = this.itemService.getTodos();
-    this.itens.forEach((el) => {
+    this.itens.forEach((el : Item) => {
       el.noCarrinho = false;
     });
 
