@@ -60,6 +60,11 @@ export class EditarPage implements OnInit {
     }
   }
 
+  selecionaCategoria(event: any) {
+    const categoriaSelecionada = event.detail.value;
+    this.categoria = categoriaSelecionada;
+  }
+
   salvar() {
 
     if (this.descricao != null && this.qtd > 0) {

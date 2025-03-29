@@ -68,9 +68,9 @@ export class HomePage implements OnInit {
 
   filtrar(event: any) {
     const query = event.target.value.toLowerCase();
-    
+
     this.setlista(this.itens)
-    
+
     this.itens = this.lista.filter(
       (d) =>
         d.descricao.toLowerCase().indexOf(query) > -1 ||
@@ -83,7 +83,6 @@ export class HomePage implements OnInit {
   }
 
   setlista(itens: Item[]) {
-    debugger
     if (this.lista.length === 0){
       this.lista = itens
     }
