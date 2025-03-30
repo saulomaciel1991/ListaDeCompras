@@ -63,19 +63,32 @@ export class HomePage implements OnInit {
   salvar(item: Item) {
     this.itens.push(item);
     this.itemService.salvarLista(this.itens);
-    this.listar();
+
+    this.setlista(this.itens); // Atualiza a lista original
+
+    this.listar(); // Atualiza a exibição na tela
   }
 
   filtrar(event: any) {
-    const query = event.target.value.toLowerCase();
+    const query = event.target.value.trim().toLowerCase(); // Remove espaços extras e usa letras minúsculas
 
-    this.setlista(this.itens)
+    if (!query) {
+      // Se a busca estiver vazia, exibir a lista completa
+      this.listar();
+      return;
+    }
 
-    this.itens = this.lista.filter(
-      (d) =>
-        d.descricao.toLowerCase().indexOf(query) > -1 ||
-        d.categoria.toLowerCase().indexOf(query) > -1
+    this.setlista(this.itens); // Garante que a lista original está armazenada
+
+    this.itens = this.lista.filter((item) =>
+      item.descricao.toLowerCase().includes(query) || // Verifica na descrição
+      item.categoria.toLowerCase().includes(query)   // Verifica na categoria
     );
+
+    // Adicionar feedback se nenhum item for encontrado
+    if (this.itens.length === 0) {
+      console.log("Nenhum item encontrado para a busca:", query);
+    }
   }
 
   limpar(event: any) {
@@ -83,9 +96,7 @@ export class HomePage implements OnInit {
   }
 
   setlista(itens: Item[]) {
-    if (this.lista.length === 0){
-      this.lista = itens
-    }
+    this.lista = [...itens]; // Clona a lista atual para evitar alterações inesperadas
   }
 
   async abrirOpcoes(item: Item) {
@@ -97,7 +108,6 @@ export class HomePage implements OnInit {
           text: 'Editar',
           icon: 'pencil',
           handler: () => {
-            // this.editarItem(item)
             this.navCrtl.navigateForward('home/editar/' + item.id);
           },
         },
@@ -106,10 +116,14 @@ export class HomePage implements OnInit {
           icon: 'trash',
           role: 'destructive',
           handler: () => {
-            this.itens = this.itens.filter((it) => {
-              return it.id != item.id;
-            });
-            this.itemService.salvarLista(this.itens);
+            // Remove o item da lista original
+            this.lista = this.lista.filter((it) => it.id !== item.id);
+
+            // Atualiza a lista visível (itens filtrados ou não filtrados)
+            this.itens = this.lista;
+
+            // Salva a lista atualizada no serviço
+            this.itemService.salvarLista(this.lista);
           },
         },
         {
