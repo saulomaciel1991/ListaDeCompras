@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
-import { Item } from './home/item/item.model';
+import { AlertController, ToastController } from '@ionic/angular';
+import { Capacitor } from '@capacitor/core';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { ItemService } from './home/item/item.service';
-import { AlertController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-root',
@@ -11,64 +11,62 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private itemService: ItemService, private http: HttpClient, private alertController: AlertController) {}
-  itens: Item[] = [];
+  constructor(
+    private alertController: AlertController,
+    private toastController: ToastController,
+    private itemService: ItemService
+  ) {}
 
+  // Remove todos os itens do carrinho
   retirarTodos() {
-    this.itens = this.itemService.getTodos();
-    this.itens.forEach((el : Item) => {
-      el.noCarrinho = false;
+    // Obtém todos os itens
+    const itens = this.itemService.getTodos();
+
+    // Remove flag de carrinho de todos
+    itens.forEach(item => {
+      item.noCarrinho = false;
     });
 
-    this.itemService.salvarLista(this.itens);
-    if (this.itens.length > 0) {
-      window.location.reload();
-    }
+    // Salva a lista atualizada
+    this.itemService.salvarLista(itens);
+
+    // Notifica o usuário
+    this.mostrarToast('Todos os itens foram removidos do carrinho');
   }
 
-  fazerBackup = async (fileNameUser?: string) => {
-    let dados = localStorage.getItem('itens');
-
-    if (dados == null || dados == undefined) {
-      return;
-    } else {
-      // Nome do arquivo: usa o fornecido pelo usuário ou um nome padrão
-      const fileName = fileNameUser ? fileNameUser : 'itens.json';
-
-      await Filesystem.writeFile({
-        path: fileName,
-        data: dados,
-        directory: Directory.Documents,
-        encoding: Encoding.UTF8,
-      });
-
-      console.log('Backup criado com sucesso em ' + fileName);
-    }
-  };
-
+  // Solicita o nome do arquivo para o backup
   async solicitarNomeBackup() {
     const alert = await this.alertController.create({
-      header: 'Nome do Backup',
+      header: 'Backup da Lista',
+      message: 'Digite um nome para o arquivo de backup',
       inputs: [
         {
           name: 'fileName',
           type: 'text',
-          placeholder: 'Digite o nome do arquivo de backup'
+          placeholder: 'Nome do arquivo (opcional)',
+          value: `lista_compras_${this.getDataFormatada()}.json`
         }
       ],
       buttons: [
         {
           text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            console.log('Operação cancelada');
-          }
-        }, {
+          role: 'cancel'
+        },
+        {
           text: 'Salvar',
           handler: (data) => {
-            const fileName = data.fileName ? `${data.fileName}.json` : undefined;
-            this.fazerBackupComNome(fileName);
+            const fileName = data.fileName || `lista_compras_${this.getDataFormatada()}.json`;
+            // No navegador, vamos exportar diretamente
+            if (Capacitor.getPlatform() === 'web') {
+              this.exportarBackupParaSistema(fileName);
+            } else {
+              // Em dispositivos, primeiro salva internamente e pergunta se quer exportar
+              this.fazerBackup(fileName).then(success => {
+                if (success) {
+                  this.confirmarExportacao(fileName);
+                }
+              });
+            }
           }
         }
       ]
@@ -77,42 +75,177 @@ export class AppComponent {
     await alert.present();
   }
 
-  async fazerBackupComNome(fileName?: string) {
+  // Cria nome de arquivo com data atual formatada
+  private getDataFormatada(): string {
+    const agora = new Date();
+    return agora.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+  }
+
+  // Faz o backup interno usando Capacitor Filesystem
+  async fazerBackup(fileNameUser?: string): Promise<boolean> {
+    let dados = localStorage.getItem('itens');
+
+    if (!dados) {
+      this.mostrarToast('Não há dados para fazer backup');
+      return false;
+    }
+
     try {
-      await this.fazerBackup(fileName);
+      const fileName = fileNameUser || `lista_compras_${this.getDataFormatada()}.json`;
+
+      await Filesystem.writeFile({
+        path: fileName,
+        data: dados,
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+      });
+
+      this.mostrarToast(`Backup criado com sucesso: ${fileName}`);
+      return true;
     } catch (error) {
-      console.error('Erro ao fazer backup', error);
+      console.error('Erro ao criar backup:', error);
+      this.mostrarToast('Erro ao criar backup');
+      return false;
     }
   }
 
-  log = async (dados: string) => {
-    await Filesystem.writeFile({
-      path: 'log.txt',
-      data: dados,
-      directory: Directory.Documents,
-      encoding: Encoding.UTF8,
-    });
-  };
+  // Exporta o backup para um arquivo físico acessível ao usuário
+  async exportarBackupParaSistema(fileNameUser?: string): Promise<boolean> {
+    let dados = localStorage.getItem('itens');
 
-  restaurarBackup(event: any) {
+    if (!dados) {
+      this.mostrarToast('Não há dados para exportar');
+      return false;
+    }
+
+    try {
+      const fileName = fileNameUser || `lista_compras_${this.getDataFormatada()}.json`;
+
+      // No navegador, cria um download de arquivo
+      if (Capacitor.getPlatform() === 'web') {
+        const blob = new Blob([dados], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+
+        document.body.appendChild(a);
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        this.mostrarToast(`Backup exportado como ${fileName}`);
+      } else {
+        // Em dispositivos nativos, salva em Documents
+        await Filesystem.writeFile({
+          path: fileName,
+          data: dados,
+          directory: Directory.Documents,
+          encoding: Encoding.UTF8,
+        });
+
+        const filePath = await this.getFilePath(Directory.Documents, fileName);
+        this.mostrarToast(`Backup salvo em: ${fileName}`);
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Erro ao exportar backup:', error);
+      this.mostrarToast('Erro ao exportar backup');
+      return false;
+    }
+  }
+
+  // Pergunta se quer exportar o backup para compartilhar
+  async confirmarExportacao(fileName: string) {
+    const alert = await this.alertController.create({
+      header: 'Exportar Backup',
+      message: 'Deseja exportar o backup para um arquivo que possa ser compartilhado?',
+      buttons: [
+        {
+          text: 'Não',
+          role: 'cancel'
+        },
+        {
+          text: 'Sim',
+          handler: () => {
+            this.exportarBackupParaSistema(fileName);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  // Restaura o backup a partir de um arquivo selecionado
+  async restaurarBackup(event: any) {
     const file = event.target.files[0];
     if (!file) {
-      console.error("Nenhum arquivo selecionado.");
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const data = JSON.parse(reader.result as string);
-        if (data != undefined && data != null) {
-          localStorage.setItem('itens', JSON.stringify(data));
+    try {
+      // Lê o arquivo usando a API File
+      const reader = new FileReader();
+
+      reader.onload = async (e: any) => {
+        try {
+          const conteudo = e.target.result;
+
+          // Tenta parsear o JSON para verificar se é válido
+          const dados = JSON.parse(conteudo);
+
+          // Verifica se os dados têm a estrutura esperada
+          if (!Array.isArray(dados)) {
+            this.mostrarToast('Formato de arquivo inválido');
+            return;
+          }
+
+          // Salva os dados no localStorage
+          localStorage.setItem('itens', conteudo);
+
+          // Confirma restauração
+          this.mostrarToast('Backup restaurado com sucesso!');
+
+          // Opcional: recarregar a página para refletir as mudanças
           window.location.reload();
+        } catch (error) {
+          console.error('Erro ao processar arquivo:', error);
+          this.mostrarToast('Erro ao processar o arquivo de backup');
         }
-      } catch (error) {
-        console.error("Erro ao ler o arquivo de backup: ", error);
-      }
-    };
-    reader.readAsText(file);
+      };
+
+      reader.readAsText(file);
+    } catch (error) {
+      console.error('Erro ao ler arquivo:', error);
+      this.mostrarToast('Erro ao ler arquivo de backup');
+    }
+  }
+
+  // Método auxiliar para obter o caminho do arquivo
+  private async getFilePath(directory: Directory, path: string): Promise<string> {
+    try {
+      const uriResult = await Filesystem.getUri({
+        directory,
+        path
+      });
+      return uriResult.uri;
+    } catch (e) {
+      console.error('Erro ao obter caminho do arquivo', e);
+      return 'Caminho não disponível';
+    }
+  }
+
+  // Método auxiliar para mostrar toast de notificação
+  private async mostrarToast(mensagem: string) {
+    const toast = await this.toastController.create({
+      message: mensagem,
+      duration: 2000,
+      position: 'bottom'
+    });
+    toast.present();
   }
 }
