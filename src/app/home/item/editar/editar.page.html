@@ -1,27 +1,31 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Produto</ion-title>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
+    <ion-title>Produto</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-card>
     <ion-card-header>
-      <ion-card-title>{{descricao}}</ion-card-title>
+      <ion-card-title>{{ descricao }}</ion-card-title>
     </ion-card-header>
+
     <ion-card-content>
 
       <ion-item>
         <ion-label position="floating">Descrição</ion-label>
-        <ion-input [(ngModel)]="descricao" type="text" (keypress)="onEnter($event.keyCode)" #descrInput></ion-input>
+        <ion-input [(ngModel)]="descricao" type="text" (keypress)="onEnter($event)" #descrInput>
+        </ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-select [value]="categoria" arial-label="Categoria" interface="modal" placeholder="Categoria"
+        <ion-label>Categoria</ion-label>
+        <ion-select [(ngModel)]="categoria" aria-label="Categoria" interface="modal" placeholder="Categoria"
           (ionChange)="selecionaCategoria($event)">
+
           <ion-select-option value="base">BASE</ion-select-option>
           <ion-select-option value="biscoitos">BISCOITOS</ion-select-option>
           <ion-select-option value="carnes">CARNES</ion-select-option>
@@ -38,23 +42,25 @@
 
       <ion-item>
         <ion-label position="floating">Quantidade</ion-label>
-        <ion-input [(ngModel)]="qtd" type="number"></ion-input>
+        <ion-input [(ngModel)]="qtd" type="number">
+        </ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label position="floating">Preço</ion-label>
-        <ion-input [(ngModel)]="valor" type="number" inputmode="decimal"
-          (keypress)="onEnter($event.keyCode)"></ion-input>
+        <ion-input [(ngModel)]="valor" type="number" inputmode="decimal" (keypress)="onEnter($event)">
+        </ion-input>
       </ion-item>
 
-      <ion-item>
+      <ion-item lines="none">
         <ion-label>No carrinho?</ion-label>
         <ion-checkbox [(ngModel)]="noCarrinho"></ion-checkbox>
       </ion-item>
 
-      <ion-button expand="block" fill="clear" shape="round" (click)="salvar()">
+      <ion-button expand="block" shape="round" (click)="salvar()">
         Salvar
       </ion-button>
+
     </ion-card-content>
   </ion-card>
 </ion-content>
