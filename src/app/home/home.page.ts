@@ -1,12 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController, NavController } from '@ionic/angular';
+import { ActionSheetController, IonicModule, NavController } from '@ionic/angular';
 import { Item } from './item/item.model';
 import { ItemService } from './item/item.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule
+  ]
 })
 export class HomePage implements OnInit {
   // Armazena todos os itens (sem filtro)

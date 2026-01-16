@@ -1,13 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NavController, ToastController } from '@ionic/angular';
+import { IonicModule, NavController, ToastController } from '@ionic/angular';
 import * as uuid from 'uuid';
 import { Item } from '../item.model';
 import { ItemService } from '../item.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-novo',
   templateUrl: './novo.page.html',
   styleUrls: ['./novo.page.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule
+  ]
 })
 export class NovoPage implements OnInit {
   item!: Item
@@ -20,7 +28,7 @@ export class NovoPage implements OnInit {
   @ViewChild('qtdInput') myInput!: any
   @ViewChild('descInput') descInput!: any
 
-  constructor(private itemService: ItemService, private navCrtl: NavController, private toastCrtl : ToastController) { }
+  constructor(private itemService: ItemService, private navCrtl: NavController, private toastCrtl: ToastController) { }
 
   ngOnInit() {
   }
@@ -57,12 +65,12 @@ export class NovoPage implements OnInit {
       this.itens.push(this.item)
       this.itemService.salvarLista(this.itens)
       this.navCrtl.navigateBack("/home")
-    }else{
+    } else {
       this.showToast("Pelo menos a descrição e quantidade deveriam ser informadas!")
     }
   }
 
-  primeiraMaiuscula(texto: string) : string{
+  primeiraMaiuscula(texto: string): string {
     texto = texto.toLowerCase()
     return texto.replace(/^\w/, (c) => c.toUpperCase());
   }
@@ -72,7 +80,7 @@ export class NovoPage implements OnInit {
       message: msg,
       duration: 2500,
       position: 'bottom',
-      color:'danger'
+      color: 'danger'
     })
 
     await toast.present();
