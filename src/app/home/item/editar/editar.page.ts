@@ -1,10 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IonicModule, NavController, ToastController } from '@ionic/angular';
-import { Item } from '../item.model';
-import { ItemService } from '../item.service';
+import {
+  IonicModule,
+  NavController,
+  ToastController,
+  IonInput
+} from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+import { Item } from '../item.model';
+import { ItemService } from '../item.service';
 
 @Component({
   selector: 'app-editar',
@@ -19,95 +25,105 @@ import { FormsModule } from '@angular/forms';
 })
 export class EditarPage implements OnInit {
 
-  item!: Item
-  itens!: Item[]
-  qtd!: number
-  valor!: number
-  descricao!: string
-  categoria!: string
-  noCarrinho!: boolean
+  public item!: Item;
+  public itens: Item[] = [];
 
-  @ViewChild('descrInput') myInput!: any
+  public qtd!: number;
+  public valor!: number;
+  public descricao!: string;
+  public categoria!: string;
+  public noCarrinho!: boolean;
+
+  @ViewChild('descrInput', { static: false })
+  public descrInput!: IonInput;
 
   constructor(
     private itemService: ItemService,
-    private navCrtl: NavController,
+    private navCtrl: NavController,
     private route: ActivatedRoute,
-    private toastCrtl : ToastController
-    ) { }
+    private toastCtrl: ToastController
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {}
 
+  ionViewDidEnter(): void {
+    this.itens = this.itemService.getTodos();
+    this.carregarItem();
+    this.descrInput?.setFocus();
   }
 
-  carregando() {
+  private carregarItem(): void {
     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap.has('produtoId')) {
-        this.navCrtl.navigateBack('/home/')
-        return
+        this.navCtrl.navigateBack('/home');
+        return;
       }
-      let paramId: any = paramMap.get('produtoId')
-      this.item = this.itemService.getbyId(paramId)
-      this.descricao = this.item.descricao
-      this.qtd = this.item.qtd
-      this.valor = this.item.valor
-      this.noCarrinho = this.item.noCarrinho
-      this.categoria = this.item.categoria.toLowerCase()
-    })
+
+      const paramId = paramMap.get('produtoId')!;
+      const itemEncontrado = this.itemService.getbyId(paramId);
+
+      if (!itemEncontrado) {
+        this.navCtrl.navigateBack('/home');
+        return;
+      }
+
+      this.item = itemEncontrado;
+      this.descricao = this.item.descricao;
+      this.qtd = this.item.qtd;
+      this.valor = this.item.valor;
+      this.noCarrinho = this.item.noCarrinho;
+      this.categoria = this.item.categoria;
+    });
   }
 
-  ionViewDidEnter() {
-    this.itens = this.itemService.getTodos()
-    this.myInput.setFocus();
-    this.carregando()
-  }
-
-  onEnter(event: any) {
-    if (event == 13) {
-      this.salvar()
+  onEnter(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.salvar();
     }
   }
 
-  selecionaCategoria(event: any) {
-    const categoriaSelecionada = event.detail.value;
-    this.categoria = categoriaSelecionada;
+  selecionaCategoria(event: any): void {
+    this.categoria = event.detail.value;
   }
 
-  salvar() {
-
-    if (this.descricao != null && this.qtd > 0) {
-
-      this.itens.find(el => {
-        if (el.id == this.item.id) {
-          el.descricao = this.primeiraMaiuscula(this.descricao)
-          el.qtd = this.qtd
-          el.valor = this.valor == null ? 0 : this.valor
-          el.noCarrinho = this.noCarrinho
-          el.categoria = this.categoria
-        }
-      })
-
-      this.itemService.salvarLista(this.itens)
-      this.navCrtl.navigateBack("/home")
-    } else{
-      this.showToast("Pelo menos a descrição e quantidade deveriam ser informadas!")
+  salvar(): void {
+    if (!this.descricao || this.qtd <= 0) {
+      this.showToast(
+        'Pelo menos a descrição e a quantidade devem ser informadas!'
+      );
+      return;
     }
+
+    const itemEditado = this.itens.find(el => el.id === this.item.id);
+
+    if (!itemEditado) {
+      this.showToast('Item não encontrado.');
+      return;
+    }
+
+    itemEditado.descricao = this.primeiraMaiuscula(this.descricao);
+    itemEditado.qtd = this.qtd;
+    itemEditado.valor = this.valor ?? 0;
+    itemEditado.noCarrinho = this.noCarrinho;
+    itemEditado.categoria = this.categoria;
+
+    this.itemService.salvarLista(this.itens);
+    this.navCtrl.navigateBack('/home');
   }
 
-  primeiraMaiuscula(texto: string): string {
-    texto = texto.toLowerCase()
-    return texto.replace(/^\w/, (c) => c.toUpperCase());
+  private primeiraMaiuscula(texto: string): string {
+    const normalizado = texto.trim().toLowerCase();
+    return normalizado.replace(/^\w/, c => c.toUpperCase());
   }
 
-  async showToast(msg: string) {
-    const toast = await this.toastCrtl.create({
+  private async showToast(msg: string): Promise<void> {
+    const toast = await this.toastCtrl.create({
       message: msg,
       duration: 2500,
       position: 'bottom',
-      color:'danger'
-    })
+      color: 'danger'
+    });
 
     await toast.present();
   }
-
 }

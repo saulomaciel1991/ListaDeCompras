@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActionSheetController, IonicModule, NavController } from '@ionic/angular';
-import { Item } from './item/item.model';
-import { ItemService } from './item/item.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
+import { Item } from './item/item.model';
+import { ItemService } from './item/item.service';
 
 @Component({
   selector: 'app-home',
@@ -13,41 +15,51 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule
+    IonicModule,
+    RouterModule
   ]
 })
-export class HomePage implements OnInit {
-  // Armazena todos os itens (sem filtro)
+export class HomePage {
+
+  /** Lista completa (fonte da verdade) */
   originalItens: Item[] = [];
 
-  // Armazena os itens que serão exibidos (com ou sem filtro)
+  /** Lista exibida (com ou sem filtro) */
   itens: Item[] = [];
 
-  // Rastreia se há filtragem ativa
-  filtragemAtiva: boolean = false;
-  termoBusca: string = '';
+  /** Controle de filtro */
+  filtragemAtiva = false;
+  termoBusca = '';
 
-  constructor(
-    private actionSheetCrtl: ActionSheetController,
-    private itemService: ItemService,
-    private navCrtl: NavController
-  ) {}
-
-  formatter = new Intl.NumberFormat('default', {
+  /** Formatter de moeda */
+  public formatter = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   });
 
-  ngOnInit(): void {}
+  constructor(
+    private actionSheetCtrl: ActionSheetController,
+    private itemService: ItemService,
+    private navCtrl: NavController
+  ) { }
 
-  ionViewWillEnter() {
+  /**
+   * Ciclo de vida correto para Ionic
+   * Sempre recarrega quando a tela entra em foco
+   */
+  ionViewWillEnter(): void {
     this.listar();
   }
 
+  /**
+   * Carrega os itens e reaplica filtro se necessário
+   */
   listar() {
-    this.originalItens = this.itemService.getTodos();
+    const dados = this.itemService.getTodos();
 
-    // Se houver um filtro ativo, aplica-o aos novos dados
+    // força nova referência
+    this.originalItens = [...dados];
+
     if (this.filtragemAtiva && this.termoBusca) {
       this.aplicarFiltro(this.termoBusca);
     } else {
@@ -55,77 +67,76 @@ export class HomePage implements OnInit {
     }
   }
 
-  getTotal() {
-    let soma: number = 0;
 
-    this.itens.forEach((e) => {
-      if (e.noCarrinho === true) {
-        soma += e.valor * e.qtd;
-      }
-    });
+  /**
+   * Total dos itens marcados no carrinho
+   */
+  getTotal(): string {
+    const soma = this.itens.reduce((total, item) => {
+      return item.noCarrinho ? total + item.valor * item.qtd : total;
+    }, 0);
 
     return this.formatter.format(soma);
   }
 
-  ordenaPorDescricao() {
+  /** Ordenações */
+  ordenaPorDescricao(): void {
     this.itemService.orderByDescricao();
     this.listar();
   }
 
-  ordenaPorQuantidade() {
+  ordenaPorQuantidade(): void {
     this.itemService.orderByQtd();
     this.listar();
   }
 
-  ordenaPorCategoria() {
+  ordenaPorCategoria(): void {
     this.itemService.orderByCategoria();
     this.listar();
   }
 
-  salvar(item: Item) {
-    // Adiciona o item à lista original
-    this.originalItens.push(item);
+  /**
+   * Aplica filtro na lista original
+   */
+  private aplicarFiltro(query: string): void {
+    const termo = query.toLowerCase();
 
-    // Salva no service (isso reordena os itens)
-    this.itemService.salvarLista(this.originalItens);
-
-    // Recarrega a lista (mantendo filtros se houver)
-    this.listar();
-  }
-
-  // Método auxiliar que aplica filtro na lista
-  private aplicarFiltro(query: string) {
-    this.itens = this.originalItens.filter((item) =>
-      item.descricao.toLowerCase().includes(query.toLowerCase()) ||
-      item.categoria.toLowerCase().includes(query.toLowerCase())
+    this.itens = this.originalItens.filter(item =>
+      item.descricao.toLowerCase().includes(termo) ||
+      item.categoria.toLowerCase().includes(termo)
     );
   }
 
-  filtrar(event: any) {
-    this.termoBusca = event.target.value.trim().toLowerCase();
+  /**
+   * Evento de busca
+   */
+  filtrar(event: any): void {
+    this.termoBusca = event.target.value?.trim().toLowerCase() ?? '';
 
     if (!this.termoBusca) {
-      // Se a busca estiver vazia, desativa o filtro
       this.filtragemAtiva = false;
       this.itens = [...this.originalItens];
       return;
     }
 
-    // Marca que há um filtro ativo
     this.filtragemAtiva = true;
-
-    // Aplica o filtro
     this.aplicarFiltro(this.termoBusca);
   }
 
-  limpar(event: any) {
+  /**
+   * Limpa busca
+   */
+  limpar(): void {
     this.filtragemAtiva = false;
     this.termoBusca = '';
-    this.listar();
+    this.itens = [...this.originalItens];
   }
 
-  async abrirOpcoes(item: Item) {
-    const actionSheet = await this.actionSheetCrtl.create({
+  /**
+   * ActionSheet de opções do item
+   */
+  async abrirOpcoes(item: Item): Promise<void> {
+    const actionSheet = await this.actionSheetCtrl.create({
       mode: 'ios',
       header: 'Opções',
       buttons: [
@@ -133,53 +144,55 @@ export class HomePage implements OnInit {
           text: 'Editar',
           icon: 'pencil',
           handler: () => {
-            this.navCrtl.navigateForward('home/editar/' + item.id);
-          },
+            this.navCtrl.navigateForward(`/home/editar/${item.id}`);
+          }
         },
         {
           text: 'Excluir',
           icon: 'trash',
           role: 'destructive',
           handler: () => {
-            // 1. Remove o item da lista original
-            this.originalItens = this.originalItens.filter((it) => it.id !== item.id);
-
-            // 2. Salva a lista atualizada no serviço
-            this.itemService.salvarLista(this.originalItens);
-
-            // 3. Se houver filtro ativo, atualiza a lista filtrada
-            if (this.filtragemAtiva) {
-              this.itens = this.itens.filter((it) => it.id !== item.id);
-            } else {
-              // Caso contrário, simplesmente atualiza com os itens originais
-              this.itens = [...this.originalItens];
-            }
-          },
+            this.excluirItem(item.id);
+          }
         },
         {
           text: item.noCarrinho ? 'Retirar do Carrinho' : 'Colocar no Carrinho',
           icon: 'cart',
           handler: () => {
-            // 1. Atualiza o status de carrinho
-            item.noCarrinho = !item.noCarrinho;
-
-            // 2. Atualiza no serviço
-            this.itemService.editar(item);
-
-            // 3. Recarrega todos os dados (pois o serviço reordena)
-            // Isso manterá o filtro se houver
-            this.listar();
-          },
+            this.toggleCarrinho(item);
+          }
         },
         {
           text: 'Cancelar',
           icon: 'close',
-          role: 'cancel',
-          handler: () => {},
-        },
-      ],
+          role: 'cancel'
+        }
+      ]
     });
 
     await actionSheet.present();
+  }
+
+  /**
+   * Remove item
+   */
+  private excluirItem(id: string): void {
+    this.originalItens = this.originalItens.filter(item => item.id !== id);
+    this.itemService.salvarLista(this.originalItens);
+
+    if (this.filtragemAtiva) {
+      this.itens = this.itens.filter(item => item.id !== id);
+    } else {
+      this.itens = [...this.originalItens];
+    }
+  }
+
+  /**
+   * Marca/desmarca carrinho
+   */
+  private toggleCarrinho(item: Item): void {
+    item.noCarrinho = !item.noCarrinho;
+    this.itemService.editar(item);
+    this.listar();
   }
 }
