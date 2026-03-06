@@ -35,8 +35,10 @@ export class AppComponent {
     // Salva a lista atualizada
     this.itemService.salvarLista(itens);
 
+    window.location.reload()
+
     // Notifica o usuário
-    this.mostrarToast('Todos os itens foram removidos do carrinho');
+    // this.mostrarToast('Todos os itens foram removidos do carrinho');
   }
 
   // Solicita o nome do arquivo para o backup

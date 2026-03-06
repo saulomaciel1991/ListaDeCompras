@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { ActionSheetController, IonicModule, NavController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -40,7 +40,8 @@ export class HomePage {
   constructor(
     private actionSheetCtrl: ActionSheetController,
     private itemService: ItemService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private cd : ChangeDetectorRef
   ) { }
 
   /**
@@ -65,6 +66,8 @@ export class HomePage {
     } else {
       this.itens = [...this.originalItens];
     }
+
+    this.cd.detectChanges();
   }
 
 
@@ -185,6 +188,8 @@ export class HomePage {
     } else {
       this.itens = [...this.originalItens];
     }
+
+    this.listar();
   }
 
   /**
