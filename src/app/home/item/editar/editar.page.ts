@@ -46,7 +46,7 @@ export class EditarPage implements OnInit {
 
   ngOnInit(): void {}
 
-  ionViewDidEnter(): void {
+  ionViewWillEnter(): void {
     this.itens = this.itemService.getTodos();
     this.carregarItem();
     this.descrInput?.setFocus();

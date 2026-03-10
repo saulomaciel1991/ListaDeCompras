@@ -34,7 +34,7 @@ export class NovoPage implements OnInit {
   }
 
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.itens = this.itemService.getTodos()
     this.descInput.setFocus();
     this.noCarrinho = false
