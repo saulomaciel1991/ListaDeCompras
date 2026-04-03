@@ -24,7 +24,7 @@ export class ItemService {
       localStorage.setItem('itens', JSON.stringify(lista));
     }
 
-    this.orderByDescricao()
+    // this.orderByDescricao()
   }
 
   salvarLista(itens: Item[]): void {

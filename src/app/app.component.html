@@ -26,6 +26,13 @@
           <input type="file" (change)="restaurarBackup($event)" style="display: none;" #fileInput />
         </ion-item>
       </ion-menu-toggle>
+      <ion-menu-toggle>
+        <ion-item lines="none" (click)="fileInput.click()">
+          <ion-label>Ordenar Automaticamente</ion-label>
+          <ion-icon name="cloud-done" slot="start"></ion-icon>
+          <input type="file" (change)="restaurarBackup($event)" style="display: none;" #fileInput />
+        </ion-item>
+      </ion-menu-toggle>
     </ion-list>
   </ion-content>
 </ion-menu>
