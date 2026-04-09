@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Item } from './item.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ItemService {
+  dataChanged = new Subject<void>();
+
   constructor() {}
 
   editar(item: Item) {
@@ -22,6 +25,7 @@ export class ItemService {
         }
       });
       localStorage.setItem('itens', JSON.stringify(lista));
+      this.dataChanged.next();
     }
 
     // this.orderByDescricao()
@@ -49,6 +53,7 @@ export class ItemService {
     });
 
     localStorage.setItem('itens', JSON.stringify(itens));
+    this.dataChanged.next();
   }
 
   orderByDescricao() {
