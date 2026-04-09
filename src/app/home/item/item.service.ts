@@ -10,6 +10,14 @@ export class ItemService {
 
   constructor() {}
 
+  get ordenarAutomaticamente(): boolean {
+    return localStorage.getItem('ordenarAutomaticamente') === 'true';
+  }
+
+  set ordenarAutomaticamente(value: boolean) {
+    localStorage.setItem('ordenarAutomaticamente', value.toString());
+  }
+
   editar(item: Item) {
     let value = localStorage.getItem('itens');
 
@@ -24,14 +32,11 @@ export class ItemService {
           it.noCarrinho = item.noCarrinho;
         }
       });
-      localStorage.setItem('itens', JSON.stringify(lista));
-      this.dataChanged.next();
+      this.salvarLista(lista);
     }
-
-    // this.orderByDescricao()
   }
 
-  salvarLista(itens: Item[]): void {
+  salvarLista(itens: Item[], ignorarOrdenacaoAuto: boolean = false): void {
     let itensNoCarrinho: Item[] = [];
     itens.forEach((el) => {
       el.descricao = el.descricao.toUpperCase();
@@ -47,6 +52,11 @@ export class ItemService {
     itens = itens.filter((el) => {
       return el.noCarrinho === false;
     });
+
+    if (this.ordenarAutomaticamente && !ignorarOrdenacaoAuto) {
+      itens.sort((a, b) => a.descricao < b.descricao ? -1 : (a.descricao > b.descricao ? 1 : 0));
+      itensNoCarrinho.sort((a, b) => a.descricao < b.descricao ? -1 : (a.descricao > b.descricao ? 1 : 0));
+    }
 
     itensNoCarrinho.forEach((el) => {
       itens.push(el);
@@ -70,7 +80,7 @@ export class ItemService {
         }
         return ret;
       });
-      this.salvarLista(lista);
+      this.salvarLista(lista, true);
     }
   }
 
@@ -88,7 +98,7 @@ export class ItemService {
         }
         return ret;
       });
-      this.salvarLista(lista);
+      this.salvarLista(lista, true);
     }
   }
 
@@ -99,7 +109,7 @@ export class ItemService {
     } else {
       let lista: any[] = JSON.parse(value);
       lista.sort((a, b) => a.noCarrinho - b.noCarrinho || a.qtd - b.qtd);
-      this.salvarLista(lista);
+      this.salvarLista(lista, true);
     }
   }
 
@@ -117,7 +127,7 @@ export class ItemService {
         }
         return ret;
       });
-      this.salvarLista(lista);
+      this.salvarLista(lista, true);
     }
   }
 

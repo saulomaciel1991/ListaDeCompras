@@ -27,10 +27,10 @@
         </ion-item>
       </ion-menu-toggle>
       <ion-menu-toggle>
-        <ion-item lines="none" (click)="fileInput.click()">
+        <ion-item lines="none">
+          <ion-icon name="swap-vertical" slot="start"></ion-icon>
           <ion-label>Ordenar Automaticamente</ion-label>
-          <ion-icon name="cloud-done" slot="start"></ion-icon>
-          <input type="file" (change)="restaurarBackup($event)" style="display: none;" #fileInput />
+          <ion-toggle slot="end" [checked]="ordenarAutomaticamente" (ionChange)="toggleOrdenar($event)"></ion-toggle>
         </ion-item>
       </ion-menu-toggle>
     </ion-list>
