@@ -122,6 +122,17 @@ export class AppComponent {
     }
   }
 
+  get ordenarAutomaticamente(): boolean {
+    return this.itemService.ordenarAutomaticamente;
+  }
+
+  toggleOrdenar(event: any) {
+    this.itemService.ordenarAutomaticamente = event.detail.checked;
+    if (this.itemService.ordenarAutomaticamente) {
+      this.itemService.orderByDescricao();
+    }
+  }
+
   // Remove todos os itens do carrinho
   retirarTodos() {
     // Obtém todos os itens
