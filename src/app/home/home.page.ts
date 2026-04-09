@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActionSheetController, NavController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { Item } from './item/item.model';
 import { ItemService } from './item/item.service';
 
@@ -8,7 +9,7 @@ import { ItemService } from './item/item.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
   // Armazena todos os itens (sem filtro)
   originalItens: Item[] = [];
 
@@ -18,6 +19,8 @@ export class HomePage implements OnInit {
   // Rastreia se há filtragem ativa
   filtragemAtiva: boolean = false;
   termoBusca: string = '';
+
+  private dataSub?: Subscription;
 
   constructor(
     private actionSheetCrtl: ActionSheetController,
@@ -30,7 +33,17 @@ export class HomePage implements OnInit {
     currency: 'BRL',
   });
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.dataSub = this.itemService.dataChanged.subscribe(() => {
+      this.listar();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.dataSub) {
+      this.dataSub.unsubscribe();
+    }
+  }
 
   ionViewWillEnter() {
     this.listar();
