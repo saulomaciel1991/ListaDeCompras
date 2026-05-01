@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
+import { App } from '@capacitor/app';
 import { AlertController, ToastController } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
+import { CapacitorShareTarget } from '@capgo/capacitor-share-target';
 import { ItemService } from './home/item/item.service';
 
 
@@ -15,7 +18,98 @@ export class AppComponent {
     private alertController: AlertController,
     private toastController: ToastController,
     private itemService: ItemService
-  ) {}
+  ) {
+    if (Capacitor.getPlatform() !== 'web') {
+      this.initShareTarget();
+    }
+  }
+
+  async initShareTarget() {
+    // Listener para o Share Target (quando usuário seleciona "Compartilhar")
+    CapacitorShareTarget.addListener('shareReceived', async (event) => {
+      if (event.files && event.files.length > 0) {
+        try {
+          const result = await Filesystem.readFile({ 
+            path: event.files[0].uri,
+            encoding: Encoding.UTF8
+          });
+          this.processarConteudoBackup(result.data);
+        } catch (error) {
+          console.error('Erro ao ler ou processar arquivo compartilhado:', error);
+          this.mostrarToast('Erro ao processar o arquivo recebido via compartilhamento.');
+        }
+      }
+    });
+
+    // Listener para Intents do tipo VIEW (quando usuário seleciona "Abrir com")
+    App.addListener('appUrlOpen', async (event) => {
+      if (event.url) {
+        try {
+          const result = await Filesystem.readFile({ 
+            path: event.url,
+            encoding: Encoding.UTF8
+          });
+          this.processarConteudoBackup(result.data);
+        } catch (error) {
+          console.error('Erro ao ler ou processar arquivo aberto:', error);
+          this.mostrarToast('Erro ao abrir o arquivo. Pode ser que o aplicativo não tenha permissão de leitura.');
+        }
+      }
+    });
+  }
+
+  async processarConteudoBackup(dados: any) {
+    if (typeof dados !== 'string') {
+      const alert = await this.alertController.create({
+        header: 'Debug Tipo de Dado',
+        message: `O dado não é string. Tipo: ${typeof dados}. Valor: ${JSON.stringify(dados).substring(0, 100)}`,
+        buttons: ['OK']
+      });
+      await alert.present();
+      return;
+    }
+
+    try {
+      const parsedData = JSON.parse(dados);
+
+      if (!Array.isArray(parsedData)) {
+        this.mostrarToast('O arquivo não parece ser um backup válido.');
+        return;
+      }
+
+      // Pergunta antes de sobrescrever
+      const alert = await this.alertController.create({
+        header: 'Importar Backup',
+        message: 'Atenção: A lista atual será substituída pelo conteúdo do backup selecionado. Deseja continuar?',
+        buttons: [
+          {
+            text: 'Não',
+            role: 'cancel'
+          },
+          {
+            text: 'Sim',
+            handler: () => {
+              localStorage.setItem('itens', dados);
+              this.mostrarToast('Lista atualizada com sucesso!');
+              window.location.reload();
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+
+    } catch (error: any) {
+      console.error('Erro de JSON parse:', error);
+      const strPreview = dados ? String(dados).substring(0, 200) : 'vazio';
+      const alert = await this.alertController.create({
+        header: 'Debug de Erro JSON',
+        message: `Erro: ${error?.message}\n\nConteúdo lido (início):\n${strPreview}`,
+        buttons: ['OK']
+      });
+      await alert.present();
+    }
+  }
 
   get ordenarAutomaticamente(): boolean {
     return this.itemService.ordenarAutomaticamente;
@@ -91,16 +185,12 @@ export class AppComponent {
           text: 'Salvar',
           handler: (data) => {
             const fileName = data.fileName || `lista_compras_${this.getDataFormatada()}.json`;
-            // No navegador, vamos exportar diretamente
+            // No navegador, faz o download do arquivo
             if (Capacitor.getPlatform() === 'web') {
               this.exportarBackupParaSistema(fileName);
             } else {
-              // Em dispositivos, primeiro salva internamente e pergunta se quer exportar
-              this.fazerBackup(fileName).then(success => {
-                if (success) {
-                  this.confirmarExportacao(fileName);
-                }
-              });
+              // Em dispositivos móveis, apenas salva no diretório Documents
+              this.fazerBackup(fileName);
             }
           }
         }
@@ -128,7 +218,7 @@ export class AppComponent {
     try {
       const fileName = fileNameUser || `lista_compras_${this.getDataFormatada()}.json`;
 
-      await Filesystem.writeFile({
+      const result = await Filesystem.writeFile({
         path: fileName,
         data: dados,
         directory: Directory.Documents,
@@ -136,6 +226,36 @@ export class AppComponent {
       });
 
       this.mostrarToast(`Backup criado com sucesso: ${fileName}`);
+
+      // Pergunta se o usuário deseja compartilhar o arquivo
+      const alert = await this.alertController.create({
+        header: 'Compartilhar',
+        message: 'Deseja compartilhar o arquivo de backup gerado?',
+        buttons: [
+          {
+            text: 'Não',
+            role: 'cancel'
+          },
+          {
+            text: 'Sim',
+            handler: async () => {
+              try {
+                await Share.share({
+                  title: 'Backup Lista de Compras',
+                  text: 'Aqui está o backup da minha lista de compras.',
+                  url: result.uri,
+                  dialogTitle: 'Compartilhar com'
+                });
+              } catch (e) {
+                console.error('Erro ao compartilhar:', e);
+              }
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+
       return true;
     } catch (error) {
       console.error('Erro ao criar backup:', error);
@@ -193,27 +313,6 @@ export class AppComponent {
     }
   }
 
-  // Pergunta se quer exportar o backup para compartilhar
-  async confirmarExportacao(fileName: string) {
-    const alert = await this.alertController.create({
-      header: 'Exportar Backup',
-      message: 'Deseja exportar o backup para um arquivo que possa ser compartilhado?',
-      buttons: [
-        {
-          text: 'Não',
-          role: 'cancel'
-        },
-        {
-          text: 'Sim',
-          handler: () => {
-            this.exportarBackupParaSistema(fileName);
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
 
   // Restaura o backup a partir de um arquivo selecionado
   async restaurarBackup(event: any) {
