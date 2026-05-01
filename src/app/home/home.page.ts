@@ -3,6 +3,7 @@ import { ActionSheetController, NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Item } from './item/item.model';
 import { ItemService } from './item/item.service';
+import packageJson from '../../../package.json';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +11,8 @@ import { ItemService } from './item/item.service';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit, OnDestroy {
+  public appVersion: string = packageJson.version;
+
   // Armazena todos os itens (sem filtro)
   originalItens: Item[] = [];
 
@@ -26,7 +29,7 @@ export class HomePage implements OnInit, OnDestroy {
     private actionSheetCrtl: ActionSheetController,
     private itemService: ItemService,
     private navCrtl: NavController
-  ) {}
+  ) { }
 
   formatter = new Intl.NumberFormat('default', {
     style: 'currency',
@@ -180,7 +183,7 @@ export class HomePage implements OnInit, OnDestroy {
           text: 'Cancelar',
           icon: 'close',
           role: 'cancel',
-          handler: () => {},
+          handler: () => { },
         },
       ],
     });
