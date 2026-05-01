@@ -45,6 +45,30 @@ export class AppComponent {
     this.mostrarToast('Todos os itens foram removidos do carrinho');
   }
 
+  // Apaga todos os itens da lista completamente
+  async limparLista() {
+    const alert = await this.alertController.create({
+      header: 'Limpar Lista',
+      message: 'Tem certeza que deseja apagar todos os itens da sua lista? Esta ação não pode ser desfeita.',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Sim, Apagar',
+          handler: () => {
+            // Salva uma lista vazia
+            this.itemService.salvarLista([]);
+            this.mostrarToast('Lista apagada com sucesso');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
   // Solicita o nome do arquivo para o backup
   async solicitarNomeBackup() {
     const alert = await this.alertController.create({
