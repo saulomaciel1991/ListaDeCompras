@@ -14,96 +14,120 @@
   </ion-toolbar>
   <br>
 
-  <ion-searchbar show-clear-button="always" placeholder="Procurar..." (ionInput)="filtrar($event)"></ion-searchbar>
-</ion-header>
+    <ion-searchbar show-clear-button="always" placeholder="Procurar..." (ionInput)="filtrar($event)"></ion-searchbar>
+  </ion-header>
 
 
-<ion-content [fullscreen]="true" mode="ios" id="content">
-  <ion-grid mode="ios">
-    <ion-row id="row-title" *ngIf="itens.length > 0">
-      <ion-col sizeXs="20" sizeSm="15">
-        <ion-item color="secondary" (click)="ordenaPorDescricao()">
-          DESCRIÇÃO
-        </ion-item>
-      </ion-col>
-      <ion-col sizeXs="6" sizeSm="6">
-        <ion-item color="secondary" (click)="ordenaPorQuantidade()">
-          QTD
-        </ion-item>
-      </ion-col>
-      <ion-col sizeXs="10" sizeSm="8">
-        <ion-item color="secondary">
-          VALOR
-        </ion-item>
-      </ion-col>
-      <ion-col sizeSm="7" class="ion-hide-sm-down">
-        <ion-item color="secondary" (click)="ordenaPorCategoria()">
-          CATEGORIA
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row id="row-detail" *ngFor="let item of itens" (click)="abrirOpcoes(item)">
-      <ion-col sizeXs="20" sizeSm="15">
-        <ion-item color="danger" *ngIf="item.noCarrinho">
-          <del>{{item.descricao}}</del>
-        </ion-item>
-        <ion-item color="tertiary" *ngIf="item.noCarrinho === false">
-          {{item.descricao}}
-        </ion-item>
-      </ion-col>
-      <ion-col sizeXs="6" sizeSm="6">
-        <ion-item color="danger" *ngIf="item.noCarrinho">
-          <del>{{item.qtd}}</del>
-        </ion-item>
-        <ion-item color="tertiary" *ngIf="item.noCarrinho === false">
-          {{item.qtd}}
-        </ion-item>
-      </ion-col>
-      <ion-col sizeXs="10" sizeSm="8">
-        <ion-item color="danger" *ngIf="item.noCarrinho">
-          <del>{{formatter.format(item.valor)}}</del>
-        </ion-item>
-        <ion-item color="tertiary" *ngIf="item.noCarrinho === false">
-          {{formatter.format(item.valor)}}
-        </ion-item>
-      </ion-col>
-      <ion-col sizeSm="7" class="ion-hide-sm-down">
-        <ion-item color="danger" *ngIf="item.noCarrinho">
-          <del>{{item.categoria}}</del>
-        </ion-item>
-        <ion-item color="tertiary" *ngIf="item.noCarrinho === false">
-          {{item.categoria}}
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-padding" *ngIf="itens.length > 0">
-      <ion-col sizeXs="12">
-        <ion-item color="warning">
-          <ion-label>Total</ion-label>
-        </ion-item>
-      </ion-col>
-      <ion-col sizeXs="12">
-        <ion-item color="warning">
-          {{getTotal()}}
-        </ion-item>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-content [fullscreen]="true" mode="ios" id="content">
+    <ion-grid mode="ios">
+      @if (itens.length > 0) {
+        <ion-row id="row-title">
+          <ion-col sizeXs="20" sizeSm="15">
+            <ion-item color="secondary" (click)="ordenaPorDescricao()">
+              DESCRIÇÃO
+            </ion-item>
+          </ion-col>
+          <ion-col sizeXs="6" sizeSm="6">
+            <ion-item color="secondary" (click)="ordenaPorQuantidade()">
+              QTD
+            </ion-item>
+          </ion-col>
+          <ion-col sizeXs="10" sizeSm="8">
+            <ion-item color="secondary">
+              VALOR
+            </ion-item>
+          </ion-col>
+          <ion-col sizeSm="7" class="ion-hide-sm-down">
+            <ion-item color="secondary" (click)="ordenaPorCategoria()">
+              CATEGORIA
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      }
+      @for (item of itens; track item) {
+        <ion-row id="row-detail" (click)="abrirOpcoes(item)">
+          <ion-col sizeXs="20" sizeSm="15">
+            @if (item.noCarrinho) {
+              <ion-item color="danger">
+                <del>{{item.descricao}}</del>
+              </ion-item>
+            }
+            @if (item.noCarrinho === false) {
+              <ion-item color="tertiary">
+                {{item.descricao}}
+              </ion-item>
+            }
+          </ion-col>
+          <ion-col sizeXs="6" sizeSm="6">
+            @if (item.noCarrinho) {
+              <ion-item color="danger">
+                <del>{{item.qtd}}</del>
+              </ion-item>
+            }
+            @if (item.noCarrinho === false) {
+              <ion-item color="tertiary">
+                {{item.qtd}}
+              </ion-item>
+            }
+          </ion-col>
+          <ion-col sizeXs="10" sizeSm="8">
+            @if (item.noCarrinho) {
+              <ion-item color="danger">
+                <del>{{formatter.format(item.valor)}}</del>
+              </ion-item>
+            }
+            @if (item.noCarrinho === false) {
+              <ion-item color="tertiary">
+                {{formatter.format(item.valor)}}
+              </ion-item>
+            }
+          </ion-col>
+          <ion-col sizeSm="7" class="ion-hide-sm-down">
+            @if (item.noCarrinho) {
+              <ion-item color="danger">
+                <del>{{item.categoria}}</del>
+              </ion-item>
+            }
+            @if (item.noCarrinho === false) {
+              <ion-item color="tertiary">
+                {{item.categoria}}
+              </ion-item>
+            }
+          </ion-col>
+        </ion-row>
+      }
+      @if (itens.length > 0) {
+        <ion-row class="ion-padding">
+          <ion-col sizeXs="12">
+            <ion-item color="warning">
+              <ion-label>Total</ion-label>
+            </ion-item>
+          </ion-col>
+          <ion-col sizeXs="12">
+            <ion-item color="warning">
+              {{getTotal()}}
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      }
+    </ion-grid>
 
-  <ion-item *ngIf="itens.length === 0">
-    <ion-label class="ion-text-center">
-      <h1>
-        Lista vazia!
-      </h1>
-    </ion-label>
-  </ion-item>
+    @if (itens.length === 0) {
+      <ion-item>
+        <ion-label class="ion-text-center">
+          <h1>
+            Lista vazia!
+          </h1>
+        </ion-label>
+      </ion-item>
+    }
 
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button routerLink="/home/novo">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-</ion-content>
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button routerLink="/home/novo">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </ion-content>
 
 <ion-footer mode="ios" class="ion-no-border">
   <ion-toolbar color="light">
