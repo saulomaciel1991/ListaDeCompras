@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
 import * as uuid from 'uuid';
 import { Item } from '../item.model';
@@ -8,6 +8,7 @@ import { ItemService } from '../item.service';
     selector: 'app-novo',
     templateUrl: './novo.page.html',
     styleUrls: ['./novo.page.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class NovoPage implements OnInit {

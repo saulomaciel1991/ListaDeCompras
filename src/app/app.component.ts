@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { App } from '@capacitor/app';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
@@ -12,6 +11,7 @@ import { ItemService } from './home/item/item.service';
     selector: 'app-root',
     templateUrl: 'app.component.html',
     styleUrls: ['app.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AppComponent {

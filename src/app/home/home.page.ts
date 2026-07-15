@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController, NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Item } from './item/item.model';
@@ -9,6 +9,7 @@ import packageJson from '../../../package.json';
     selector: 'app-home',
     templateUrl: 'home.page.html',
     styleUrls: ['home.page.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class HomePage implements OnInit, OnDestroy {
