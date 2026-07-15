@@ -5,9 +5,10 @@ import { Item } from '../item.model';
 import { ItemService } from '../item.service';
 
 @Component({
-  selector: 'app-editar',
-  templateUrl: './editar.page.html',
-  styleUrls: ['./editar.page.scss'],
+    selector: 'app-editar',
+    templateUrl: './editar.page.html',
+    styleUrls: ['./editar.page.scss'],
+    standalone: false
 })
 export class EditarPage implements OnInit {
 

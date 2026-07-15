@@ -5,9 +5,10 @@ import { Item } from '../item.model';
 import { ItemService } from '../item.service';
 
 @Component({
-  selector: 'app-novo',
-  templateUrl: './novo.page.html',
-  styleUrls: ['./novo.page.scss'],
+    selector: 'app-novo',
+    templateUrl: './novo.page.html',
+    styleUrls: ['./novo.page.scss'],
+    standalone: false
 })
 export class NovoPage implements OnInit {
   item!: Item

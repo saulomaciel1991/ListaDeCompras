@@ -6,9 +6,10 @@ import { ItemService } from './item/item.service';
 import packageJson from '../../../package.json';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+    selector: 'app-home',
+    templateUrl: 'home.page.html',
+    styleUrls: ['home.page.scss'],
+    standalone: false
 })
 export class HomePage implements OnInit, OnDestroy {
   public appVersion: string = packageJson.version;
