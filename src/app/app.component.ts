@@ -220,7 +220,7 @@ export class AppComponent {
 
   // Faz o backup interno usando Capacitor Filesystem
   async fazerBackup(fileNameUser?: string): Promise<boolean> {
-    let dados = localStorage.getItem('itens');
+    const dados = localStorage.getItem('itens');
 
     if (!dados) {
       this.mostrarToast('Não há dados para fazer backup');
@@ -278,7 +278,7 @@ export class AppComponent {
 
   // Exporta o backup para um arquivo físico acessível ao usuário
   async exportarBackupParaSistema(fileNameUser?: string): Promise<boolean> {
-    let dados = localStorage.getItem('itens');
+    const dados = localStorage.getItem('itens');
 
     if (!dados) {
       this.mostrarToast('Não há dados para exportar');

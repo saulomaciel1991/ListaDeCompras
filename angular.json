@@ -73,7 +73,10 @@
               "aot": false,
               "optimization": false,
               "extractLicenses": false,
-              "polyfills": "src/polyfills.ts"
+              "polyfills": [
+                "src/polyfills.ts",
+                "zone.js/testing"
+              ]
             },
             "testing-ci": {
               "aot": false,
@@ -108,6 +111,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "tsconfig.spec.json",
+            "runnerConfig": "vitest.config.ts",
             "reporters": [
               "default"
             ],

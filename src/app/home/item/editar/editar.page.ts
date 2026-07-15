@@ -40,7 +40,7 @@ export class EditarPage implements OnInit {
         this.navCrtl.navigateBack('/home/')
         return
       }
-      let paramId: any = paramMap.get('produtoId')
+      const paramId: any = paramMap.get('produtoId')
       this.item = this.itemService.getbyId(paramId)
       this.descricao = this.item.descricao
       this.qtd = this.item.qtd

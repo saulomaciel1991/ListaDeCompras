@@ -22,8 +22,8 @@ export class HomePage implements OnInit, OnDestroy {
   itens: Item[] = [];
 
   // Rastreia se há filtragem ativa
-  filtragemAtiva: boolean = false;
-  termoBusca: string = '';
+  filtragemAtiva = false;
+  termoBusca = '';
 
   private dataSub?: Subscription;
 
@@ -66,7 +66,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   getTotal() {
-    let soma: number = 0;
+    let soma = 0;
 
     this.itens.forEach((e) => {
       if (e.noCarrinho === true) {

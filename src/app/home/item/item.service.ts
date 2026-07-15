@@ -19,12 +19,12 @@ export class ItemService {
   }
 
   editar(item: Item) {
-    let value = localStorage.getItem('itens');
+    const value = localStorage.getItem('itens');
 
     if (value == null || value == undefined) {
       return;
     } else {
-      let lista: any[] = JSON.parse(value);
+      const lista: any[] = JSON.parse(value);
       lista.find((it) => {
         if (it.id == item.id) {
           it.descricao = item.descricao;
@@ -36,8 +36,8 @@ export class ItemService {
     }
   }
 
-  salvarLista(itens: Item[], ignorarOrdenacaoAuto: boolean = false): void {
-    let itensNoCarrinho: Item[] = [];
+  salvarLista(itens: Item[], ignorarOrdenacaoAuto = false): void {
+    const itensNoCarrinho: Item[] = [];
     itens.forEach((el) => {
       el.descricao = el.descricao.toUpperCase();
       if (el.noCarrinho === true) {
@@ -67,11 +67,11 @@ export class ItemService {
   }
 
   orderByDescricao() {
-    let value = localStorage.getItem('itens');
+    const value = localStorage.getItem('itens');
     if (value == null || value == undefined) {
       return;
     } else {
-      let lista: any[] = JSON.parse(value);
+      const lista: any[] = JSON.parse(value);
       lista.sort((a, b) => {
         let ret = 0;
 
@@ -85,11 +85,11 @@ export class ItemService {
   }
 
   orderByNoCarrinho() {
-    let value = localStorage.getItem('itens');
+    const value = localStorage.getItem('itens');
     if (value == null || value == undefined) {
       return;
     } else {
-      let lista: any[] = JSON.parse(value);
+      const lista: any[] = JSON.parse(value);
       lista.sort((a, b) => {
         let ret = 0;
 
@@ -103,22 +103,22 @@ export class ItemService {
   }
 
   orderByQtd() {
-    let value = localStorage.getItem('itens');
+    const value = localStorage.getItem('itens');
     if (value == null || value == undefined) {
       return;
     } else {
-      let lista: any[] = JSON.parse(value);
+      const lista: any[] = JSON.parse(value);
       lista.sort((a, b) => a.noCarrinho - b.noCarrinho || a.qtd - b.qtd);
       this.salvarLista(lista, true);
     }
   }
 
   orderByCategoria(){
-    let value = localStorage.getItem('itens');
+    const value = localStorage.getItem('itens');
     if (value == null || value == undefined) {
       return;
     } else {
-      let lista: any[] = JSON.parse(value);
+      const lista: any[] = JSON.parse(value);
       lista.sort((a, b) => {
         let ret = 0;
 
@@ -132,21 +132,21 @@ export class ItemService {
   }
 
   getTodos(): Item[] {
-    let value = localStorage.getItem('itens');
+    const value = localStorage.getItem('itens');
 
     if (value == null || value == undefined) {
       return [];
     } else {
-      let lista: any[] = JSON.parse(value);
+      const lista: any[] = JSON.parse(value);
       return lista;
     }
   }
 
   getbyId(id: string): Item {
-    let value: any = localStorage.getItem('itens');
+    const value: any = localStorage.getItem('itens');
 
-    let lista: any[] = JSON.parse(value);
-    let item: Item = lista.find((e) => {
+    const lista: any[] = JSON.parse(value);
+    const item: Item = lista.find((e) => {
       return e.id == id;
     });
 
