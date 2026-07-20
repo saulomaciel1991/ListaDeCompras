@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Definindo variáveis para cores
 $primary-color: #3498db;
 $secondary-color: #2ecc71;
@@ -79,11 +81,11 @@ ion-col {
     }
 
     &:hover {
-      background-color: darken($primary-color, 10%);
+      background-color: color.adjust($primary-color, $lightness: -10%);
     }
 
     del {
-      color: lighten($danger-color, 20%);
+      color: color.adjust($danger-color, $lightness: 20%);
     }
   }
 }
