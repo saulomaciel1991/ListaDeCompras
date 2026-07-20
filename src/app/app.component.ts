@@ -4,6 +4,7 @@ import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
 import { CapacitorShareTarget } from '@capgo/capacitor-share-target';
+import { App } from '@capacitor/app';
 import { ItemService } from './home/item/item.service';
 
 
@@ -27,7 +28,7 @@ export class AppComponent {
 
   async initShareTarget() {
     // Listener para o Share Target (quando usuário seleciona "Compartilhar")
-    CapacitorShareTarget.addListener('shareReceived', async (event) => {
+    CapacitorShareTarget.addListener('shareReceived', async (event: any) => {
       if (event.files && event.files.length > 0) {
         try {
           const result = await Filesystem.readFile({ 
@@ -43,7 +44,7 @@ export class AppComponent {
     });
 
     // Listener para Intents do tipo VIEW (quando usuário seleciona "Abrir com")
-    App.addListener('appUrlOpen', async (event) => {
+    App.addListener('appUrlOpen', async (event: any) => {
       if (event.url) {
         try {
           const result = await Filesystem.readFile({ 
@@ -109,17 +110,6 @@ export class AppComponent {
         buttons: ['OK']
       });
       await alert.present();
-    }
-  }
-
-  get ordenarAutomaticamente(): boolean {
-    return this.itemService.ordenarAutomaticamente;
-  }
-
-  toggleOrdenar(event: any) {
-    this.itemService.ordenarAutomaticamente = event.detail.checked;
-    if (this.itemService.ordenarAutomaticamente) {
-      this.itemService.orderByDescricao();
     }
   }
 
