@@ -1,0 +1,53 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Categorias</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding-vertical">
+  <div class="header-info ion-padding-horizontal">
+    <p class="subtitle">
+      Arraste as categorias para definir o roteiro dos corredores na sua lista de compras.
+    </p>
+  </div>
+
+  <ion-list *ngIf="categories.length > 0">
+    <ion-reorder-group [disabled]="false" (ionItemReorder)="handleReorder($any($event))">
+      <ion-item *ngFor="let cat of categories" class="category-item">
+        <ion-icon name="pricetag-outline" slot="start" color="medium"></ion-icon>
+        <ion-label>
+          <h2>{{ cat.name }}</h2>
+          <p>Ordem no percurso: {{ cat.order_index + 1 }}</p>
+        </ion-label>
+
+        <ion-buttons slot="end">
+          <ion-button fill="clear" color="primary" (click)="editarCategoria(cat)">
+            <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="confirmarExclusao(cat)">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+
+        <ion-reorder slot="end"></ion-reorder>
+      </ion-item>
+    </ion-reorder-group>
+  </ion-list>
+
+  <!-- Estado Vazio -->
+  <div class="empty-state ion-padding ion-text-center" *ngIf="!isLoading && categories.length === 0">
+    <ion-icon name="pricetag-outline" class="empty-icon"></ion-icon>
+    <h3>Nenhuma categoria cadastrada</h3>
+    <p>Cadastre suas categorias para organizar os itens por corredores.</p>
+  </div>
+
+  <!-- FAB para Adicionar -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="abrirModalNovaCategoria()" color="secondary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

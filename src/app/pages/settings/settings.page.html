@@ -1,0 +1,135 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Configurações & Backup</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Seção 1: Preferências de Preenchimento Padrão -->
+  <ion-card class="settings-card">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="settings-outline"></ion-icon> Valores Padrão para Novos Itens
+      </ion-card-title>
+      <ion-card-subtitle>
+        Valores sugeridos automaticamente ao adicionar um produto sem cadastro prévio
+      </ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list lines="full">
+        <ion-item>
+          <ion-input
+            label="Unidade Primária Padrão"
+            labelPlacement="stacked"
+            [(ngModel)]="defaults.default_unit_primary">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-select
+            label="Tipo de Conversão Padrão"
+            labelPlacement="stacked"
+            [(ngModel)]="defaults.default_conversion_type">
+            <ion-select-option value="MULTIPLY">Multiplicar</ion-select-option>
+            <ion-select-option value="DIVIDE">Dividir</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            type="number"
+            label="Fator de Conversão Padrão"
+            labelPlacement="stacked"
+            [(ngModel)]="defaults.default_conversion_factor">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            label="Unidade Secundária Padrão"
+            labelPlacement="stacked"
+            [(ngModel)]="defaults.default_unit_secondary">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            type="number"
+            label="Quantidade Inicial Padrão"
+            labelPlacement="stacked"
+            [(ngModel)]="defaults.default_quantity">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-select
+            label="Modo de Visualização Padrão no Modal"
+            labelPlacement="stacked"
+            [(ngModel)]="defaults.default_view_mode">
+            <ion-select-option value="basic">Modo Básico (Mais rápido)</ion-select-option>
+            <ion-select-option value="complete">Modo Completo (Com todas unidades)</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+
+      <div class="ion-padding-top">
+        <ion-button expand="block" color="primary" [disabled]="isSaving" (click)="salvarPreferencias()">
+          <ion-icon name="save-outline" slot="start"></ion-icon>
+          Salvar Preferências
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Seção 2: Backup & Restauração Local (JSON) -->
+  <ion-card class="settings-card">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="document-text-outline"></ion-icon> Backup & Restauração (JSON)
+      </ion-card-title>
+      <ion-card-subtitle>
+        Exporte todos os seus dados ou importe arquivos legados e backups anteriores
+      </ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p class="section-desc">
+        A importação suporta tanto o novo formato completo quanto arquivos legados antigos em JSON.
+      </p>
+
+      <ion-button expand="block" fill="outline" color="primary" class="ion-margin-bottom" (click)="exportarBackupJson()">
+        <ion-icon name="cloud-download-outline" slot="start"></ion-icon>
+        Exportar Backup (.json)
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" color="secondary" (click)="fileInput.click()">
+        <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+        Importar Arquivo (.json)
+      </ion-button>
+      <input type="file" accept=".json" (change)="importarArquivo($event)" style="display: none;" #fileInput />
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Seção 3: Google Drive (Fase 7) -->
+  <ion-card class="settings-card drive-card">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="logo-google"></ion-icon> Google Drive (drive.appdata)
+      </ion-card-title>
+      <ion-card-subtitle>
+        Sincronização em nuvem na pasta oculta do usuário
+      </ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-note color="medium" class="drive-note">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        A sincronização com Google Drive está agendada para a Fase 7 da esteira de implementação.
+      </ion-note>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

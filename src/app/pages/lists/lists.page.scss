@@ -1,0 +1,133 @@
+.lists-container {
+  padding: 0 8px;
+}
+
+.list-card {
+  margin-bottom: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--ion-color-step-150);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+
+  &.reference-card {
+    border-left: 5px solid var(--ion-color-warning);
+  }
+
+  ion-card-header {
+    padding-bottom: 8px;
+  }
+
+  .card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+
+    .badges-wrapper {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .reference-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+    }
+
+    .items-badge {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--ion-color-step-600);
+    }
+  }
+
+  .list-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ion-color-step-900);
+    margin-top: 4px;
+  }
+
+  .date-subtitle {
+    font-size: 0.78rem;
+    color: var(--ion-color-step-500);
+  }
+}
+
+.metrics-grid {
+  display: flex;
+  background: var(--ion-color-step-50);
+  border-radius: 8px;
+  padding: 8px 12px;
+  align-items: center;
+
+  .metric-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .metric-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--ion-color-step-500);
+      margin-bottom: 2px;
+    }
+
+    .metric-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ion-color-step-800);
+
+      &.cart-val {
+        color: var(--ion-color-primary);
+      }
+    }
+  }
+
+  .metric-divider {
+    width: 1px;
+    height: 28px;
+    background: var(--ion-color-step-200);
+    margin: 0 12px;
+  }
+}
+
+.card-actions-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px 8px;
+  border-top: 1px solid var(--ion-color-step-100);
+  background: var(--ion-color-step-50);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.empty-state {
+  margin-top: 60px;
+
+  .empty-icon {
+    font-size: 64px;
+    color: var(--ion-color-step-300);
+    margin-bottom: 12px;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ion-color-step-700);
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: var(--ion-color-step-500);
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,239 @@
+.list-detail-content {
+  --padding-bottom: 72px;
+}
+
+.category-section {
+  margin-bottom: 12px;
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ion-color-step-100);
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    color: var(--ion-color-step-800);
+    text-transform: uppercase;
+
+    ion-icon {
+      font-size: 16px;
+      color: var(--ion-color-primary);
+    }
+
+    .category-count {
+      color: var(--ion-color-medium);
+      font-weight: 500;
+    }
+  }
+}
+
+.items-list {
+  background: transparent;
+  padding: 0;
+}
+
+.item-row {
+  --padding-start: 12px;
+  --inner-padding-end: 4px;
+  border-bottom: 1px solid var(--ion-color-step-100);
+  background: var(--ion-background-color);
+
+  &.checked-row {
+    opacity: 0.65;
+    background: var(--ion-color-step-50);
+  }
+
+  ion-checkbox {
+    --size: 22px;
+    margin-inline-end: 12px;
+  }
+
+  .item-label {
+    cursor: pointer;
+
+    .item-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 3px;
+
+      .product-name {
+        font-size: 0.98rem;
+        font-weight: 600;
+        color: var(--ion-color-step-900);
+
+        &.line-through {
+          text-decoration: line-through;
+          color: var(--ion-color-medium);
+        }
+      }
+
+      .brand-tag {
+        font-size: 0.72rem;
+        background: var(--ion-color-step-150);
+        color: var(--ion-color-step-700);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 500;
+      }
+    }
+
+    .item-details-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .quantity-text {
+        font-size: 0.82rem;
+        color: var(--ion-color-step-600);
+      }
+
+      .price-badge {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 1px 6px;
+        border-radius: 4px;
+
+        &.cheaper {
+          background: #d4edda;
+          color: #155724;
+        }
+
+        &.expensive {
+          background: #f8d7da;
+          color: #721c24;
+        }
+      }
+    }
+  }
+
+  .item-price-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 4px;
+    cursor: pointer;
+
+    .price-val {
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: var(--ion-color-step-900);
+
+      &.line-through {
+        text-decoration: line-through;
+        color: var(--ion-color-medium);
+      }
+    }
+
+    .unit-price-sub {
+      font-size: 0.72rem;
+      color: var(--ion-color-medium);
+    }
+  }
+}
+
+.empty-state {
+  margin-top: 80px;
+
+  .empty-icon {
+    font-size: 64px;
+    color: var(--ion-color-step-300);
+    margin-bottom: 12px;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ion-color-step-700);
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: var(--ion-color-step-500);
+  }
+}
+
+.add-item-fab {
+  margin-bottom: 50px;
+}
+
+.footer-totals-bar {
+  display: flex;
+  background: var(--ion-color-light);
+  border-top: 1px solid var(--ion-color-step-200);
+  padding: 8px 12px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+
+  .total-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &.divider {
+      border-left: 1px solid var(--ion-color-step-200);
+      border-right: 1px solid var(--ion-color-step-200);
+    }
+
+    .lbl {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--ion-color-step-600);
+    }
+
+    .val {
+      font-size: 0.95rem;
+      font-weight: 700;
+
+      &.cart {
+        color: var(--ion-color-primary);
+      }
+
+      &.pending {
+        color: var(--ion-color-step-700);
+      }
+
+      &.total {
+        color: var(--ion-color-step-900);
+      }
+    }
+  }
+}
+
+.autocomplete-list {
+  max-height: 180px;
+  overflow-y: auto;
+  background: var(--ion-color-step-50);
+  border: 1px solid var(--ion-color-step-200);
+  border-radius: 8px;
+  margin: 4px 0 8px 0;
+
+  ion-item {
+    --padding-start: 12px;
+    font-size: 0.88rem;
+
+    h3 {
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 0.75rem;
+      color: var(--ion-color-medium);
+    }
+  }
+}
+
+.fast-track-box {
+  margin-top: -4px;
+}
+
+.divider-section {
+  margin-top: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: 0.5px;
+}

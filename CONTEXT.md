@@ -31,7 +31,7 @@ CREATE INDEX idx_categories_order ON categories(order_index);
 -- 2. Produtos globais cadastrados (Catálogo Geral)
 CREATE TABLE products (
     id TEXT PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL UNIQUE,                   -- Ex: 'Feijão Preto', 'Leite Integral'
     category_id TEXT,
     unit_primary TEXT NOT NULL,                  -- Ex: 'pct', 'cx', 'kg', 'l', 'un'
     conversion_type TEXT NOT NULL,               -- 'MULTIPLY' ou 'DIVIDE'
@@ -61,6 +61,7 @@ CREATE TABLE list_items (
     id TEXT PRIMARY KEY,
     list_id TEXT NOT NULL,
     product_id TEXT NOT NULL,
+    brand TEXT DEFAULT '',                       -- Snapshot da marca adquirida (para comparação justa)
     purchase_quantity REAL NOT NULL,             -- Quantidade na unidade primária (ex: 2 caixas)
     unit_primary TEXT NOT NULL,                  -- Snapshot da unidade no momento da compra
     conversion_type TEXT NOT NULL,               -- 'MULTIPLY' ou 'DIVIDE'
@@ -76,6 +77,7 @@ CREATE TABLE list_items (
 );
 CREATE INDEX idx_list_items_list ON list_items(list_id);
 CREATE INDEX idx_list_items_product ON list_items(product_id);
+CREATE INDEX idx_list_items_brand ON list_items(brand);
 
 -- 5. Configurações e preferências de preenchimento padrão
 CREATE TABLE user_defaults (
@@ -117,16 +119,20 @@ SELECT
     li.total_price, 
     li.purchase_quantity, 
     li.unit_primary, 
-    li.unit_secondary
+    li.unit_secondary,
+    li.brand
 FROM list_items li
 JOIN lists l ON li.list_id = l.id
 WHERE l.is_reference_price = 1 
   AND li.product_id = :product_id
   AND li.total_price > 0
+ORDER BY 
+  (CASE WHEN LOWER(li.brand) = LOWER(:brand) THEN 0 ELSE 1 END),
+  li.created_at DESC
 LIMIT 1;
 ```
 
-*Se o produto não constar na lista de referência ou seu `total_price` for zero, o item é tratado como sem histórico prévio.*
+*Se o usuário informou uma marca, o sistema prioriza o preço histórico daquela mesma marca para uma comparação justa de mercado. Caso a marca informada não tenha histórico, utiliza o preço registrado para o produto em outra marca. Se o produto não constar na lista de referência ou seu `total_price` for zero, o item é tratado como sem histórico prévio.*
 
 ---
 

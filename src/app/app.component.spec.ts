@@ -1,13 +1,17 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, importProvidersFrom } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-
+import { provideRouter } from '@angular/router';
+import { IonicStorageModule } from '@ionic/storage-angular';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AppComponent],
+      imports: [AppComponent],
+      providers: [
+        provideRouter([]),
+        importProvidersFrom(IonicStorageModule.forRoot()),
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
@@ -17,5 +21,4 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
-
 });

@@ -1,0 +1,113 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Minhas Listas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding-vertical">
+  <div class="lists-container" *ngIf="lists.length > 0">
+    <ion-card
+      *ngFor="let list of lists"
+      class="list-card"
+      [class.reference-card]="list.is_reference_price === 1">
+      
+      <ion-card-header (click)="abrirLista(list)">
+        <div class="card-top-row">
+          <div class="badges-wrapper">
+            <!-- Badge de Status -->
+            <ion-badge [color]="list.status === 'active' ? 'primary' : list.status === 'completed' ? 'success' : 'medium'">
+              {{ list.status === 'active' ? 'Ativa' : list.status === 'completed' ? 'Concluída' : 'Arquivada' }}
+            </ion-badge>
+
+            <!-- Badge de Referência de Preço -->
+            <ion-badge *ngIf="list.is_reference_price === 1" color="warning" class="reference-badge">
+              <ion-icon name="star"></ion-icon> Referência de Preços
+            </ion-badge>
+          </div>
+
+          <ion-note class="items-badge">
+            {{ list.items_count || 0 }} {{ (list.items_count || 0) === 1 ? 'item' : 'itens' }}
+          </ion-note>
+        </div>
+
+        <ion-card-title class="list-title">{{ list.name }}</ion-card-title>
+        <ion-card-subtitle class="date-subtitle">
+          Criada em {{ list.created_at | date: 'dd/MM/yyyy HH:mm' }}
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content (click)="abrirLista(list)">
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <span class="metric-label">No Carrinho</span>
+            <span class="metric-value cart-val">{{ currencyFormatter.format(list.total_cart || 0) }}</span>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="metric-box">
+            <span class="metric-label">Total Estimado</span>
+            <span class="metric-value">{{ currencyFormatter.format(list.total_estimated || 0) }}</span>
+          </div>
+        </div>
+      </ion-card-content>
+
+      <!-- Barra de Ações Rápidas -->
+      <div class="card-actions-bar">
+        <ion-button fill="clear" size="small" color="primary" (click)="abrirLista(list)">
+          Abrir
+        </ion-button>
+
+        <ion-button
+          fill="clear"
+          size="small"
+          color="success"
+          *ngIf="list.status === 'active'"
+          (click)="concluirLista(list)">
+          <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+          Concluir
+        </ion-button>
+
+        <ion-button
+          fill="clear"
+          size="small"
+          color="warning"
+          *ngIf="list.is_reference_price !== 1"
+          (click)="definirComoReferencia(list)">
+          <ion-icon name="star-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+
+        <ion-button fill="clear" size="small" color="primary" (click)="renomearLista(list)" title="Renomear lista">
+          <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+
+        <ion-button fill="clear" size="small" color="medium" (click)="duplicarLista(list)" title="Duplicar lista">
+          <ion-icon name="copy-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+
+        <ion-button fill="clear" size="small" color="danger" (click)="confirmarExclusao(list)" title="Excluir lista">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card>
+  </div>
+
+  <!-- Estado Vazio -->
+  <div class="empty-state ion-padding ion-text-center" *ngIf="!isLoading && lists.length === 0">
+    <ion-icon name="cart-outline" class="empty-icon"></ion-icon>
+    <h3>Nenhuma lista de compras</h3>
+    <p>Crie sua primeira lista para ir ao mercado comparando preços em tempo real.</p>
+    <ion-button (click)="criarNovaLista()" color="primary" class="ion-margin-top">
+      <ion-icon name="add" slot="start"></ion-icon>
+      Criar Nova Lista
+    </ion-button>
+  </div>
+
+  <!-- FAB para Adicionar -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="criarNovaLista()" color="secondary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

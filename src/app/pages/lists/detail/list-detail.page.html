@@ -1,0 +1,300 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/lists"></ion-back-button>
+    </ion-buttons>
+    <ion-title (click)="renomearLista()" style="cursor: pointer;" title="Toque para renomear a lista">{{ shoppingList?.name || 'Lista de Compras' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="renomearLista()" title="Renomear lista">
+        <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="limparCarrinho()" title="Desmarcar carrinho">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="list-detail-content">
+  <!-- Grupos de Itens por Categoria (Corredores) -->
+  <div *ngIf="groupedItems.length > 0">
+    <div *ngFor="let group of groupedItems; trackBy: trackByGroupId" class="category-section">
+      <div class="category-header">
+        <ion-icon name="pricetag-outline"></ion-icon>
+        <span class="category-title">{{ group.categoryName }}</span>
+        <span class="category-count">({{ group.items.length }})</span>
+      </div>
+
+      <ion-list lines="none" class="items-list">
+        <ion-item
+          *ngFor="let item of group.items; trackBy: trackByItemId"
+          class="item-row"
+          [class.checked-row]="item.is_checked === 1">
+
+          <!-- Checkbox do Carrinho -->
+          <ion-checkbox
+            slot="start"
+            [checked]="item.is_checked === 1"
+            (click)="$event.stopPropagation(); toggleChecked(item)">
+          </ion-checkbox>
+
+          <ion-label (click)="editarItem(item)" class="item-label">
+            <div class="item-title-row">
+              <span class="product-name" [class.line-through]="item.is_checked === 1">
+                {{ item.product_name }}
+              </span>
+              <span *ngIf="item.brand" class="brand-tag">
+                {{ item.brand }}
+              </span>
+            </div>
+
+            <div class="item-details-row">
+              <span class="quantity-text">
+                {{ item.purchase_quantity }} {{ item.unit_primary }}
+              </span>
+
+              <!-- Badge Comparativo de Preço Histórico -->
+              <span
+                *ngIf="item.price_status === 'cheaper'"
+                class="price-badge cheaper"
+                title="Mais barato que a lista de referência">
+                ▼ {{ item.price_difference_percent }}%
+              </span>
+              <span
+                *ngIf="item.price_status === 'expensive'"
+                class="price-badge expensive"
+                title="Mais caro que a lista de referência">
+                ▲ +{{ item.price_difference_percent }}%
+              </span>
+            </div>
+          </ion-label>
+
+          <!-- Preço Total do Item -->
+          <div slot="end" class="item-price-col" (click)="editarItem(item)">
+            <span class="price-val" [class.line-through]="item.is_checked === 1">
+              {{ currencyFormatter.format(item.total_price || 0) }}
+            </span>
+            <span class="unit-price-sub" *ngIf="item.purchase_quantity > 1">
+              {{ currencyFormatter.format(item.unit_price_primary || 0) }}/{{ item.unit_primary }}
+            </span>
+          </div>
+
+          <!-- Botão de Excluir -->
+          <ion-button
+            slot="end"
+            fill="clear"
+            color="danger"
+            size="small"
+            (click)="$event.stopPropagation(); confirmarExclusaoItem(item)">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+
+  <!-- Estado Vazio -->
+  <div class="empty-state ion-padding ion-text-center" *ngIf="!isLoading && allItems.length === 0">
+    <ion-icon name="cart-outline" class="empty-icon"></ion-icon>
+    <h3>Sua lista está vazia</h3>
+    <p>Toque no botão <strong>+</strong> abaixo para incluir itens na lista de compras.</p>
+  </div>
+
+  <!-- FAB para Adicionar Item -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="add-item-fab">
+    <ion-fab-button (click)="abrirModalNovoItem()" color="secondary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- Modal de Inclusão / Edição de Item -->
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="fecharModal()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>{{ isEditing ? 'Editar Item' : 'Adicionar Item' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="fecharModal()">
+              <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+
+        <!-- Seletor de Modo Básico vs Completo -->
+        <ion-toolbar color="light" class="mode-switch-toolbar">
+          <ion-segment [value]="viewMode" (ionChange)="alternarModoVisualizacao()">
+            <ion-segment-button value="basic">
+              <ion-label>Modo Básico</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="complete">
+              <ion-label>Modo Completo</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding">
+        <ion-list lines="full">
+          <!-- Busca de Produto com Autocomplete e Fast-Track -->
+          <ion-item>
+            <ion-input
+              label="Produto *"
+              labelPlacement="stacked"
+              placeholder="Digite o nome do produto..."
+              [value]="productSearchTerm"
+              (ionInput)="onProductSearchInput($event)">
+            </ion-input>
+          </ion-item>
+
+          <!-- Lista de Sugestões Autocomplete -->
+          <div class="autocomplete-list" *ngIf="filteredCatalog.length > 0">
+            <ion-item
+              button
+              *ngFor="let p of filteredCatalog"
+              (click)="selecionarProduto(p)">
+              <ion-icon name="pricetag-outline" slot="start" color="medium"></ion-icon>
+              <ion-label>
+                <h3>{{ p.name }}</h3>
+                <p>{{ p.category_name || 'OUTROS' }} &bull; 1 {{ p.unit_primary }} = {{ p.conversion_factor }} {{ p.unit_secondary }}</p>
+              </ion-label>
+            </ion-item>
+          </div>
+
+          <!-- Opção Fast-Track: Cadastrar inline -->
+          <div
+            class="fast-track-box ion-padding-vertical"
+            *ngIf="productSearchTerm && !selectedProduct && filteredCatalog.length === 0">
+            <ion-button expand="block" fill="outline" color="secondary" size="small" (click)="criarProdutoInline()">
+              <ion-icon name="add" slot="start"></ion-icon>
+              + Cadastrar '{{ productSearchTerm }}' no catálogo
+            </ion-button>
+          </div>
+
+          <!-- Marca do Produto (apenas na lista de compras) -->
+          <ion-item>
+            <ion-input
+              label="Marca (opcional)"
+              labelPlacement="stacked"
+              placeholder="Ex: Camil, Parmalat, Tio João"
+              [(ngModel)]="formBrand">
+            </ion-input>
+          </ion-item>
+
+          <!-- Quantidade Primária -->
+          <ion-item>
+            <ion-input
+              type="number"
+              label="Quantidade ({{ formUnitPrimary }}) *"
+              labelPlacement="stacked"
+              [(ngModel)]="formQuantity"
+              (ionInput)="onFieldChange('purchase_quantity')">
+            </ion-input>
+          </ion-item>
+
+          <!-- Preço Total Pago -->
+          <ion-item>
+            <ion-input
+              type="number"
+              step="0.01"
+              label="Preço Total (R$) *"
+              labelPlacement="stacked"
+              placeholder="R$ 0,00"
+              [(ngModel)]="formTotalPrice"
+              (ionInput)="onFieldChange('total_price')">
+            </ion-input>
+          </ion-item>
+
+          <!-- CAMPOS EXCLUSIVOS DO MODO COMPLETO -->
+          <div *ngIf="viewMode === 'complete'">
+            <ion-item-divider class="divider-section">
+              <ion-label>Fatores de Conversão & Unitários</ion-label>
+            </ion-item-divider>
+
+            <ion-item>
+              <ion-input
+                label="Unidade Primária"
+                labelPlacement="stacked"
+                [(ngModel)]="formUnitPrimary">
+              </ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-select
+                label="Tipo de Conversão"
+                labelPlacement="stacked"
+                [(ngModel)]="formConversionType"
+                (ionChange)="onFieldChange('conversion')">
+                <ion-select-option value="MULTIPLY">Multiplicar</ion-select-option>
+                <ion-select-option value="DIVIDE">Dividir</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-input
+                type="number"
+                label="Fator de Conversão"
+                labelPlacement="stacked"
+                [(ngModel)]="formConversionFactor"
+                (ionInput)="onFieldChange('conversion')">
+              </ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input
+                label="Unidade Secundária"
+                labelPlacement="stacked"
+                [(ngModel)]="formUnitSecondary">
+              </ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input
+                type="number"
+                step="0.01"
+                label="Preço Unitário Primário (R$/{{ formUnitPrimary }})"
+                labelPlacement="stacked"
+                [(ngModel)]="formUnitPricePrimary"
+                (ionInput)="onFieldChange('unit_price_primary')">
+              </ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input
+                type="number"
+                step="0.0001"
+                label="Preço Unitário Secundário (R$/{{ formUnitSecondary }}) [até 4 decimais]"
+                labelPlacement="stacked"
+                [(ngModel)]="formPricePerSecondaryUnit"
+                (ionInput)="onFieldChange('unit_price_secondary')">
+              </ion-input>
+            </ion-item>
+          </div>
+        </ion-list>
+
+        <div class="ion-padding-top">
+          <ion-button expand="block" color="primary" (click)="salvarItem()">
+            {{ isEditing ? 'Atualizar Item' : 'Adicionar à Lista' }}
+          </ion-button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+
+<!-- Rodapé Fixo com Totais (Carrinho, Pendente, Geral) -->
+<ion-footer>
+  <div class="footer-totals-bar">
+    <div class="total-col">
+      <span class="lbl">No Carrinho</span>
+      <span class="val cart">{{ currencyFormatter.format(totalCart) }}</span>
+    </div>
+    <div class="total-col divider">
+      <span class="lbl">Pendente</span>
+      <span class="val pending">{{ currencyFormatter.format(totalPending) }}</span>
+    </div>
+    <div class="total-col">
+      <span class="lbl">Total Geral</span>
+      <span class="val total">{{ currencyFormatter.format(totalGeneral) }}</span>
+    </div>
+  </div>
+</ion-footer>

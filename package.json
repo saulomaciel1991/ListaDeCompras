@@ -32,6 +32,7 @@
     "@capacitor/share": "^8.0.0",
     "@capacitor/status-bar": "^8.0.0",
     "@ionic/angular": "^8.7.16",
+    "@ionic/storage-angular": "^4.0.0",
     "@maskito/core": "^5.0.1",
     "ionicons": "^8.0.13",
     "ng2-currency-mask": "^13.0.3",
